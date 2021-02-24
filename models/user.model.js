@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import validator from "validator";
 
 const userSchema = new mongoose.Schema(
   {
@@ -6,19 +7,7 @@ const userSchema = new mongoose.Schema(
       fname: String,
       lname: String,
     },
-    contact: {
-      email: {
-        type: String,
-        unique: true,
-      },
-      phone: {
-        type: Number,
-        unique: [
-          true,
-          "phone number is already associated with different account",
-        ],
-      },
-    },
+    email: String,
     address: {
       phone: Number,
       building: String,

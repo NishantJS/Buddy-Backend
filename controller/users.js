@@ -1,20 +1,18 @@
 import User from "../models/user.model.js";
+import bcrypt from "bcryptjs";
 
 const _create = async (req, res) => {
   try {
-    let { fname, lname, email, phone, pass } = req.query;
-    if (!fname && !lname && !email && !phone) {
-      return res.status(400).send({
-        message: "User content can not be empty",
-      });
-    }
+    let { username, email, pass } = req.body;
+
+    const saltRounds = 10;
+    const salt = await bcrypt.genSalt(saltRounds);
+    let hashed = await bcrypt.hash(pass, salt);
 
     const newUser = await new User({
-      fname,
-      lname,
+      username,
       email,
-      age,
-      phone,
+      pass: hashed,
     });
 
     const user = await newUser.save();
@@ -35,9 +33,26 @@ const _findAll = async (res) => {
   }
 };
 
+const _checkOne = async (req, res) => {
+  const email = req.body.email;
+
+  const user = await User.findOne({
+    email: new RegExp(`^${email}`, "i"),
+  });
+
+  if (user) {
+    return res.status(400).send({
+      message: `Account exists with ${req.body.email}`,
+    });
+  } else {
+    _create(req, res);
+  }
+};
+
 const _findOne = async (req, res) => {
   try {
-    const email = req.query.email;
+    const { email } = req.body;
+
     const user = await User.findOne({
       email: new RegExp(`^${email}`, "i"),
     });
@@ -45,8 +60,14 @@ const _findOne = async (req, res) => {
       return res.status(404).send({
         message: `User not found with id ${req.query.email}`,
       });
-    } else {
-      return res.status(302).send(user);
+    } else if (user) {
+      const { pass } = req.body;
+
+      const match = await bcrypt.compare(pass, user.pass);
+
+      if (match)
+        return res.status(302).send({ msg: `Welcome ${user.username.fname}` });
+      else return res.status(401).send({ err: "Password is incorrect" });
     }
   } catch (err) {
     if (err.kind === "ObjectId") {
@@ -116,4 +137,4 @@ const _delete = async (req, res) => {
   }
 };
 
-export default { _create, _delete, _findAll, _findOne, _update };
+export default { _create, _delete, _findAll, _findOne, _update, _checkOne };

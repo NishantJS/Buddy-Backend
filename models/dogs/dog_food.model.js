@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+
 const dogFoodSchema = new mongoose.Schema({
   title: String,
   thumbnail: String,

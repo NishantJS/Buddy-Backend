@@ -17,9 +17,7 @@ const categorySchema = new mongoose.Schema({
   sub_categories: mongoose.Schema.Types.ObjectId,
 });
 
-const Category = new mongoose.model("Category", categorySchema);
-
-export default Category;
+export default categorySchema;
 
 // {
 //     title: {

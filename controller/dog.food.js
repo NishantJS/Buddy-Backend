@@ -1,4 +1,4 @@
-import DogFood from "../models/dogs/dog_food.model.js";
+import { DogFood } from "../models/index.js";
 
 const _create = async (req, res) => {
   try {

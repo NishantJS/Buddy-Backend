@@ -1,4 +1,4 @@
-import User from "../models/user.model.js";
+import { User } from "../models/index.js";
 import bcrypt from "bcryptjs";
 
 const _create = async (req, res) => {
@@ -42,11 +42,9 @@ const _checkOne = async (req, res) => {
 
   if (user) {
     return res.status(400).send({
-      message: `Account exists with ${req.body.email}`,
+      message: `Account exists with ${email}`,
     });
-  } else {
-    _create(req, res);
-  }
+  } else await _create(req, res);
 };
 
 const _findOne = async (req, res) => {
@@ -58,7 +56,7 @@ const _findOne = async (req, res) => {
     });
     if (!user) {
       return res.status(404).send({
-        message: `User not found with id ${req.query.email}`,
+        message: `User not found with ${email}`,
       });
     } else if (user) {
       const { pass } = req.body;
@@ -117,22 +115,17 @@ const _update = async (req, res) => {
 
 const _delete = async (req, res) => {
   try {
-    const email = req.query.email;
+    const email = req.body.email;
     const user = await User.deleteOne({
       email: new RegExp(`^${email}`, "i"),
     });
     if (!user) {
-      return res.status(404).send("user Not Found");
+      return res.status(404).send("User Not Found");
     }
     return res.status(200).send("user deleted we are sorry to let you go");
   } catch (err) {
-    if (err.kind === "ObjectId" || err.name === "NotFound") {
-      return res.status(404).send({
-        message: `User not found with id ${req.params.username}`,
-      });
-    }
     return res.status(500).send({
-      message: `Could not delete user with id ${req.params.userid}`,
+      message: `Could not delete user with id ${email}`,
     });
   }
 };

@@ -1,22 +1,26 @@
 import Validator from "validator";
 import isEmpty from "is-empty";
 
-function validateLoginInput(data) {
+const validateLoginInput = ({ email, pass }) => {
   let errors = {};
-  data.email = !isEmpty(data.email) ? data.email : "";
-  data.password = !isEmpty(data.password) ? data.password : "";
-  if (Validator.isEmpty(data.email)) {
-    errors.email = "Email field is required";
-  } else if (!Validator.isEmail(data.email)) {
-    errors.email = "Email is invalid";
-  }
-  if (Validator.isEmpty(data.pass)) {
-    errors.password = "Password field is required";
+  if (!email) errors.email = "Email is missing";
+  else if (!pass) errors.pass = "Password is missing";
+  else {
+    email = !isEmpty(email) ? email : "";
+    pass = !isEmpty(pass) ? pass : "";
+
+    if (Validator.isEmpty(pass)) errors.pass = "Password field is required";
+
+    if (Validator.isEmpty(email)) {
+      errors.email = "Email field is required";
+    } else if (!Validator.isEmail(email)) {
+      errors.email = "Email is invalid";
+    }
   }
   return {
     errors,
     isValid: isEmpty(errors),
   };
-}
+};
 
 export default validateLoginInput;

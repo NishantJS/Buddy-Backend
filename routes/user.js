@@ -5,26 +5,26 @@ import jwt from "jsonwebtoken";
 import registerValidator from "../validator/register.js";
 
 const user = express.Router();
-user.post("/", User._create);
-user.delete("/", User._delete);
-
-user.get("/", async (req, res) => {
-  User._findAll(res);
-});
-
-user.get("/login", async (req, res) => {
+user.post("/login", async (req, res) => {
   const { errors, isValid } = loginValidator(req.body);
 
   if (!isValid) return res.status(400).json(errors);
-  else User._findOne(req, res);
+  else await User._findOne(req, res);
 });
 
 user.post("/register/", async (req, res) => {
   const { errors, isValid } = registerValidator(req.body);
 
   if (!isValid) return res.status(400).json(errors);
+  else await User._checkOne(req, res);
+});
 
-  User._checkOne(req, res);
+user.get("/", async (_req, res) => {
+  User._findAll(res);
+});
+
+user.delete("/", async (req, res) => {
+  User._delete(req, res);
 });
 
 export default user;

@@ -4,12 +4,17 @@
   "description": "",
   "main": "server.js",
   "type": "module",
+  "homepage": "buddy.nishantc.me",
+  "license": "ISC",
   "scripts": {
-    "start": "nodemon bin/www",
+    "start": "nodemon bin/www.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "Nishantchorge79@gmail.com",
-  "license": "ISC",
+  "author": {
+    "name": "Nishant Chorge",
+    "email": "nishantchorge79@gmail.com",
+    "url": "https://www.nishantc.me"
+  },
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "cookie-parser": "^1.4.5",

@@ -5,16 +5,21 @@ const userSchema = new mongoose.Schema({
     fname: String,
     lname: String,
   },
-  email: String,
-  address: {
-    phone: Number,
-    line1: String,
-    line2: String,
-    city: String,
-    state: String,
-    pincode: Number,
-  },
+  email: { type: String, required: true, unique: true },
+  address: [
+    {
+      full_name: String,
+      line1: String,
+      line2: String,
+      city: String,
+      state: String,
+      pin: Number,
+      phone: [Number],
+    },
+  ],
   cart: [mongoose.Schema.Types.ObjectId],
+  wishlist: [mongoose.Schema.Types.ObjectId],
+  orders: [mongoose.Schema.Types.ObjectId],
   pass: String,
 });
 

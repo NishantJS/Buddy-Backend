@@ -4,6 +4,8 @@ nodemon.json
 
 .env
 
+test.json
+
 user.rest
 
 vscode/*

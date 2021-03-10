@@ -1,5 +1,6 @@
 import { User } from "../models/index.js";
 import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
 
 const _create = async (req, res) => {
   try {
@@ -18,7 +19,10 @@ const _create = async (req, res) => {
     const user = await newUser.save();
     return res.status(201).send(user);
   } catch (err) {
-    return res.status(500).send(err);
+    return res.status(500).send({
+      err,
+      msg: err.message || "⚠ Some error occurred while creating an Account.",
+    });
   }
 };
 
@@ -28,23 +32,31 @@ const _findAll = async (res) => {
     return res.status(302).send(users);
   } catch (err) {
     return res.status(500).send({
-      message: err.message || "Some error occurred while retrieving Users.",
+      err,
+      message: err.message || "⚠ Some error occurred while retrieving Users",
     });
   }
 };
 
 const _checkOne = async (req, res) => {
-  const email = req.body.email;
+  try {
+    const email = req.body.email;
 
-  const user = await User.findOne({
-    email: new RegExp(`^${email}`, "i"),
-  });
-
-  if (user) {
-    return res.status(400).send({
-      message: `Account exists with ${email}`,
+    const user = await User.findOne({
+      email: new RegExp(`^${email}`, "i"),
     });
-  } else await _create(req, res);
+
+    if (user) {
+      return res.status(400).send({
+        msg: `Account exists with ${email} 👯‍♂️`,
+      });
+    } else await _create(req, res);
+  } catch (err) {
+    return res.status(500).send({
+      err,
+      msg: err.message || "⚠ Some error occurred while checking Email",
+    });
+  }
 };
 
 const _findOne = async (req, res) => {
@@ -54,32 +66,43 @@ const _findOne = async (req, res) => {
     const user = await User.findOne({
       email: new RegExp(`^${email}`, "i"),
     });
+
     if (!user) {
       return res.status(404).send({
-        message: `User not found with ${email}`,
+        msg: `User not found with ${email} ❌`,
       });
     } else if (user) {
       const { pass } = req.body;
 
       const match = await bcrypt.compare(pass, user.pass);
 
-      if (match)
-        return res.status(302).send({ msg: `Welcome ${user.username.fname}` });
-      else return res.status(401).send({ err: "Password is incorrect" });
+      if (match) {
+        const userData = toUserData(user);
+
+        const accessToken = jwt.sign(
+          { user: userData._id, role: "buyer" },
+          process.env.JWT_SECRET,
+          {
+            expiresIn: process.env.JWT_EXPIRES_IN,
+          }
+        );
+
+        return res.status(202).send({
+          token: accessToken,
+          user: userData,
+          msg: `Welcome ${user.username.fname} 👋`,
+        });
+      } else return res.status(401).send({ err: "Password is incorrect ❌" });
     }
   } catch (err) {
-    if (err.kind === "ObjectId") {
-      return res.status(404).send({
-        message: `user not found with id ${req.query.email}`,
-      });
-    }
     return res.status(500).send({
-      message: `Error retrieving user with id ${err}`,
+      err,
+      message: err.message || `⚠ Error retrieving user with id ${email}`,
     });
   }
 };
 
-const _update = async (req, res) => {
+const _update = async (_req, _res) => {
   // if (!req.body.content) {
   //   return res.status(400).send({
   //     message: "Note content can not be empty",
@@ -116,18 +139,26 @@ const _update = async (req, res) => {
 const _delete = async (req, res) => {
   try {
     const email = req.body.email;
+    const fname = req.body.fname;
     const user = await User.deleteOne({
       email: new RegExp(`^${email}`, "i"),
     });
-    if (!user) {
-      return res.status(404).send("User Not Found");
-    }
-    return res.status(200).send("user deleted we are sorry to let you go");
+    if (!user.deletedCount) {
+      return res.status(404).send({ msg: "User Not Found ❌" });
+    } else
+      return res.status(200).send({
+        msg: `Account deleted ❌. We are sorry to let you go ${fname} 😢`,
+      });
   } catch (err) {
     return res.status(500).send({
-      message: `Could not delete user with id ${email}`,
+      err,
+      message: err.message || `⚠ Could not delete user with ${email}`,
     });
   }
 };
 
 export default { _create, _delete, _findAll, _findOne, _update, _checkOne };
+
+const toUserData = ({ _id, cart, wishlist, orders, email, username }) => {
+  id: _id, cart, wishlist, orders, email, username;
+};

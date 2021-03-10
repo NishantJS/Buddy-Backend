@@ -20,11 +20,11 @@ user.post("/register/", async (req, res) => {
 });
 
 user.get("/", async (_req, res) => {
-  User._findAll(res);
+  await User._findAll(res);
 });
 
 user.delete("/", async (req, res) => {
-  User._delete(req, res);
+  await User._delete(req, res);
 });
 
 export default user;

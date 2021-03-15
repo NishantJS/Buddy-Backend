@@ -17,7 +17,16 @@ const userSchema = new mongoose.Schema({
       phone: [Number],
     },
   ],
-  cart: [mongoose.Schema.Types.ObjectId],
+  cart: [
+    {
+      id: mongoose.Schema.Types.ObjectId,
+      title: String,
+      price: {
+        price: Number,
+        retail: String,
+      },
+    },
+  ],
   wishlist: [mongoose.Schema.Types.ObjectId],
   orders: [mongoose.Schema.Types.ObjectId],
   pass: String,

@@ -21,7 +21,7 @@ function validateRegisterInput(data) {
     lname = !isEmpty(lname) ? lname : "";
 
     if (Validator.isEmpty(fname)) errors.fname = "First Name is required";
-    if (Validator.isEmpty(lname)) errors.lname = "Lirst Name is required";
+    if (Validator.isEmpty(lname)) errors.lname = "Last Name is required";
     if (Validator.isEmpty(pass)) errors.pass = "Password field is required";
 
     if (Validator.isEmpty(email)) {

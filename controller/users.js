@@ -17,7 +17,9 @@ const _create = async (req, res) => {
     });
 
     const user = await newUser.save();
-    return res.status(201).send(user);
+    const userData = user;
+    userData.pass = undefined;
+    return res.status(201).send(userData);
   } catch (err) {
     return res.status(500).send({
       err,
@@ -77,20 +79,19 @@ const _findOne = async (req, res) => {
       const match = await bcrypt.compare(pass, user.pass);
 
       if (match) {
-        const userData = toUserData(user);
+        let userData = user;
+        userData.pass = undefined;
 
-        const accessToken = jwt.sign(
-          { user: userData._id, role: "buyer" },
-          process.env.JWT_SECRET,
-          {
-            expiresIn: process.env.JWT_EXPIRES_IN,
-          }
-        );
+        const payload = { user: userData._id, role: "buyer" };
+
+        const token = jwt.sign(payload, process.env.JWT_SECRET, {
+          expiresIn: process.env.JWT_EXPIRES_IN,
+        });
 
         return res.status(202).send({
-          token: accessToken,
+          token,
           user: userData,
-          msg: `Welcome ${user.username.fname} 👋`,
+          msg: `Welcome ${userData.username.fname} 👋`,
         });
       } else return res.status(401).send({ err: "Password is incorrect ❌" });
     }
@@ -102,38 +103,33 @@ const _findOne = async (req, res) => {
   }
 };
 
-const _update = async (_req, _res) => {
-  // if (!req.body.content) {
-  //   return res.status(400).send({
-  //     message: "Note content can not be empty",
-  //   });
-  // }
-  // Note.findByIdAndUpdate(
-  //   req.params.noteId,
-  //   {
-  //     title: req.body.title || "Untitled Note",
-  //     content: req.body.content,
-  //   },
-  //   { new: true }
-  // )
-  //   .then((note) => {
-  //     if (!note) {
-  //       return res.status(404).send({
-  //         message: "Note not found with id " + req.params.noteId,
-  //       });
-  //     }
-  //     res.send(note);
-  //   })
-  //   .catch((err) => {
-  //     if (err.kind === "ObjectId") {
-  //       return res.status(404).send({
-  //         message: "Note not found with id " + req.params.noteId,
-  //       });
-  //     }
-  //     return res.status(500).send({
-  //       message: "Error updating note with id " + req.params.noteId,
-  //     });
-  //   });
+const _update = async (req, res) => {
+  User.findByIdAndUpdate(
+    req.user.user,
+    {
+      req: req.body.title || "Untitled Note",
+      content: req.body.content,
+    },
+    { upsert: true }
+  )
+    .then((note) => {
+      if (!note) {
+        return res.status(404).send({
+          message: "Note not found with id " + req.params.noteId,
+        });
+      }
+      res.send(note);
+    })
+    .catch((err) => {
+      if (err.kind === "ObjectId") {
+        return res.status(404).send({
+          message: "Note not found with id " + req.params.noteId,
+        });
+      }
+      return res.status(500).send({
+        message: "Error updating note with id " + req.params.noteId,
+      });
+    });
 };
 
 const _delete = async (req, res) => {
@@ -158,7 +154,3 @@ const _delete = async (req, res) => {
 };
 
 export default { _create, _delete, _findAll, _findOne, _update, _checkOne };
-
-const toUserData = ({ _id, cart, wishlist, orders, email, username }) => {
-  id: _id, cart, wishlist, orders, email, username;
-};

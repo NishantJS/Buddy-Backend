@@ -9,7 +9,7 @@ mongoose
     useNewUrlParser: true,
     useCreateIndex: true,
     useUnifiedTopology: true,
-    useFindAndModify: true,
+    useFindAndModify: false,
   })
   .catch(() => console.log("Connection to db unsuccessful"));
 

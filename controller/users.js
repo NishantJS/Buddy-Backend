@@ -82,7 +82,7 @@ const _findOne = async (req, res) => {
         let userData = user;
         userData.pass = undefined;
 
-        const payload = { user: userData._id, role: "buyer" };
+        const payload = { user: userData._id };
 
         const token = jwt.sign(payload, process.env.JWT_SECRET, {
           expiresIn: process.env.JWT_EXPIRES_IN,

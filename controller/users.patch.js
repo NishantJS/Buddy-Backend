@@ -11,21 +11,90 @@ const _checkId = async (id) => {
   }
 };
 
-const _updateCart = async (id, content) => {
+const _updateCartAdd = async (id, updateData) => {
   try {
     if (!mongoose.isValidObjectId(id)) throw error;
     const updatedData = await User.findByIdAndUpdate(
       id,
       {
-        $addToSet: { cart: content },
+        $addToSet: {
+          cart: {
+            _id: updateData.id,
+            price: updateData.price,
+            title: updateData.title,
+          },
+        },
       },
-      { new: true, upsert: true }
+      { new: true }
     );
     return { isValid: true, updatedData };
   } catch (e) {
-    console.log(e.message || e);
     return { isValid: false, err: "Wrong Token. Please Login Again!" };
   }
 };
 
-export default { _updateCart, _checkId };
+const _updateCartRemove = async (id, updateData) => {
+  try {
+    if (!mongoose.isValidObjectId(id)) throw error;
+    const updatedData = await User.findByIdAndUpdate(
+      id,
+      {
+        $pull: {
+          cart: { _id: updateData.id },
+        },
+      },
+      { new: true }
+    );
+    return { isValid: true, updatedData };
+  } catch (e) {
+    return { isValid: false, err: "Wrong Token. Please Login Again!" };
+  }
+};
+
+const _updateWishListAdd = async (id, updateData) => {
+  try {
+    if (!mongoose.isValidObjectId(id)) throw error;
+    const updatedData = await User.findByIdAndUpdate(
+      id,
+      {
+        $addToSet: {
+          wishlist: {
+            _id: updateData.id,
+            price: updateData.price,
+            title: updateData.title,
+          },
+        },
+      },
+      { new: true }
+    );
+    return { isValid: true, updatedData };
+  } catch (e) {
+    return { isValid: false, err: "Wrong Token. Please Login Again!" };
+  }
+};
+
+const _updateWishListRemove = async (id, updateData) => {
+  try {
+    if (!mongoose.isValidObjectId(id)) throw error;
+    const updatedData = await User.findByIdAndUpdate(
+      id,
+      {
+        $pull: {
+          wishlist: { _id: updateData.id },
+        },
+      },
+      { new: true }
+    );
+    return { isValid: true, updatedData };
+  } catch (e) {
+    return { isValid: false, err: "Wrong Token. Please Login Again!" };
+  }
+};
+
+export default {
+  _updateCartAdd,
+  _updateWishListAdd,
+  _updateCartRemove,
+  _updateWishListRemove,
+  _checkId,
+};

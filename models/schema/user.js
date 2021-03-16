@@ -19,7 +19,7 @@ const userSchema = new mongoose.Schema({
   ],
   cart: [
     {
-      id: mongoose.Schema.Types.ObjectId,
+      _id: mongoose.Schema.Types.ObjectId,
       title: String,
       price: {
         price: Number,
@@ -27,7 +27,16 @@ const userSchema = new mongoose.Schema({
       },
     },
   ],
-  wishlist: [mongoose.Schema.Types.ObjectId],
+  wishlist: [
+    {
+      _id: mongoose.Schema.Types.ObjectId,
+      title: String,
+      price: {
+        price: Number,
+        retail: String,
+      },
+    },
+  ],
   orders: [mongoose.Schema.Types.ObjectId],
   pass: String,
 });

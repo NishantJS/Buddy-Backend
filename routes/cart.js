@@ -16,7 +16,7 @@ cart.patch("/add", async (req, res) => {
         res
           .status(200)
           .send({ user: update.updatedData, msg: "Update Successful" });
-    } else throw { msg: "Cart Data Not found" };
+    } else throw { msg: "Cart Data Not Found" };
   } catch (error) {
     res.status(500).send({ error });
   }
@@ -35,7 +35,7 @@ cart.patch("/remove", async (req, res) => {
         res
           .status(200)
           .send({ user: update.updatedData, msg: "Update Successful" });
-    } else throw { msg: "Cart Data Not found" };
+    } else throw { msg: "Cart Data Not Found" };
   } catch (error) {
     res.status(500).send({ error });
   }

@@ -19,7 +19,7 @@ user.post("/login", async (req, res) => {
 user.post("/register/", async (req, res) => {
   const { errors, isValid } = registerValidator(req.body);
 
-  if (!isValid) return res.status(400).send(errors);
+  if (!isValid) return res.status(400).json(errors);
   else await User._checkOne(req, res);
 });
 
@@ -35,7 +35,7 @@ user.use(
       if (!check.isValid) throw check.error;
       next();
     } catch (e) {
-      res.status(500).send({ msg: e });
+      res.status(500).json({ msg: e });
     }
   }
 );

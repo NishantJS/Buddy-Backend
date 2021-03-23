@@ -15,10 +15,10 @@ wishlist.patch("/add", async (req, res) => {
       else
         res
           .status(200)
-          .send({ user: update.updatedData, msg: "Update Successful" });
+          .json({ user: update.updatedData, msg: "Update Successful" });
     } else throw { msg: "Wishlist Data Not found" };
   } catch (error) {
-    res.status(500).send({ error });
+    res.status(500).json({ error });
   }
 });
 
@@ -34,10 +34,10 @@ wishlist.patch("/remove", async (req, res) => {
       else
         res
           .status(200)
-          .send({ user: update.updatedData, msg: "Update Successful" });
+          .json({ user: update.updatedData, msg: "Update Successful" });
     } else throw { msg: "Wishlist Data Not found" };
   } catch (error) {
-    res.status(500).send({ error });
+    res.status(500).json({ error });
   }
 });
 

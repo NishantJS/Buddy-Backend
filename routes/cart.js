@@ -15,10 +15,10 @@ cart.patch("/add", async (req, res) => {
       else
         res
           .status(200)
-          .send({ user: update.updatedData, msg: "Update Successful" });
+          .json({ user: update.updatedData, msg: "Update Successful" });
     } else throw { msg: "Cart Data Not Found" };
   } catch (error) {
-    res.status(500).send({ error });
+    res.status(500).json({ error });
   }
 });
 

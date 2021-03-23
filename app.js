@@ -17,9 +17,9 @@ import "./db/mongo.js";
 
 // ?Routers
 import user from "./routes/user.js";
-import category from "./routes/category.js";
-import dogs from "./routes/dogs.js";
-import "./controller/jwt.js";
+import shop from "./routes/shop/index.js";
+import "./auth/jwt.js";
+import quote from "./routes/quotes.js";
 
 // ?Middlewares
 app.use(cookieParser());
@@ -31,9 +31,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // ?Use Routers
-app.use("/categories", category);
 app.use("/user", user);
-app.use("/dog", dogs);
+app.use("/quote", quote)
+app.use("/shop", shop)
+
 
 // import path from "path";
 // app.use(express.static(path.join(__dirname, "build")));

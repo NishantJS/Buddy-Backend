@@ -4,24 +4,14 @@ import isEmpty from "is-empty";
 function validateRegisterInput(data) {
   let errors = {};
 
-  if (!data.username.fname) errors.fname = "First Name is required field";
-  else if (!data.username.lname) errors.lname = "Last Name is required field";
-  else if (!data.email) errors.email = "Email is required field";
+  if (!data.email) errors.email = "Email is required field";
   else if (!data.pass) errors.pass = "Password is required field";
   else {
-    let {
-      username: { fname, lname },
-      email,
-      pass,
-    } = data;
+    let { email, pass } = data;
 
     email = !isEmpty(email) ? email : "";
     pass = !isEmpty(pass) ? pass : "";
-    fname = !isEmpty(fname) ? fname : "";
-    lname = !isEmpty(lname) ? lname : "";
 
-    if (Validator.isEmpty(fname)) errors.fname = "First Name is required";
-    if (Validator.isEmpty(lname)) errors.lname = "Last Name is required";
     if (Validator.isEmpty(pass)) errors.pass = "Password field is required";
 
     if (Validator.isEmpty(email)) {

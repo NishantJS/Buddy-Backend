@@ -4,26 +4,33 @@ import jwt from "jsonwebtoken";
 
 const _create = async (req, res) => {
   try {
-    let { username, email, pass } = req.body;
+    let { email, pass } = req.body;
 
     const saltRounds = 10;
     const salt = await bcrypt.genSalt(saltRounds);
     let hashed = await bcrypt.hash(pass, salt);
 
     const newUser = await new User({
-      username,
       email,
       pass: hashed,
     });
 
     const user = await newUser.save();
     const userData = user;
+    const payload = { user: userData._id };
+
+    const token = jwt.sign(payload, process.env.JWT_SECRET, {
+      expiresIn: process.env.JWT_EXPIRES_IN,
+    });
+
     userData.pass = undefined;
-    return res.status(201).send(userData);
+    return res
+      .status(201)
+      .json({error:false, token, user: userData, msg: "Login Successful" });
   } catch (err) {
-    return res.status(500).send({
-      err,
-      msg: err.message || "⚠ Some error occurred while creating an Account.",
+    return res.status(500).json({
+      error:true,
+      message: err.message || "⚠ Some error occurred while creating an Account.",
     });
   }
 };
@@ -31,9 +38,9 @@ const _create = async (req, res) => {
 const _findAll = async (res) => {
   try {
     const users = await User.find();
-    return res.status(302).send(users);
+    return res.status(302).json(users);
   } catch (err) {
-    return res.status(500).send({
+    return res.status(500).json({
       err,
       message: err.message || "⚠ Some error occurred while retrieving Users",
     });
@@ -49,13 +56,14 @@ const _checkOne = async (req, res) => {
     });
 
     if (user) {
-      return res.status(400).send({
+      return res.status(200).json({error:true,
         msg: `Account exists with ${email} 👯‍♂️`,
       });
     } else await _create(req, res);
   } catch (err) {
-    return res.status(500).send({
+    return res.status(500).json({
       err,
+      error:true,
       msg: err.message || "⚠ Some error occurred while checking Email",
     });
   }
@@ -70,7 +78,8 @@ const _findOne = async (req, res) => {
     });
 
     if (!user) {
-      return res.status(404).send({
+      return res.status(404).json({
+        error: true,
         msg: `User not found with ${email} ❌`,
       });
     } else if (user) {
@@ -88,15 +97,15 @@ const _findOne = async (req, res) => {
           expiresIn: process.env.JWT_EXPIRES_IN,
         });
 
-        return res.status(202).send({
+        return res.status(202).json({
           token,
           user: userData,
-          msg: `Welcome ${userData.username.fname} 👋`,
+          msg: "Login Successful",
         });
-      } else return res.status(401).send({ err: "Password is incorrect ❌" });
+      } else return res.status(401).json({ err: "Password is incorrect ❌" ,error: true});
     }
   } catch (err) {
-    return res.status(500).send({
+    return res.status(500).json({
       err,
       message: err.message || `⚠ Error retrieving user with id ${email}`,
     });
@@ -114,19 +123,19 @@ const _update = async (req, res) => {
   )
     .then((note) => {
       if (!note) {
-        return res.status(404).send({
+        return res.status(404).json({
           message: "Note not found with id " + req.params.noteId,
         });
       }
-      res.send(note);
+      res.json(note);
     })
     .catch((err) => {
       if (err.kind === "ObjectId") {
-        return res.status(404).send({
+        return res.status(404).json({
           message: "Note not found with id " + req.params.noteId,
         });
       }
-      return res.status(500).send({
+      return res.status(500).json({
         message: "Error updating note with id " + req.params.noteId,
       });
     });
@@ -140,14 +149,18 @@ const _delete = async (req, res) => {
       email: new RegExp(`^${email}`, "i"),
     });
     if (!user.deletedCount) {
-      return res.status(404).send({ msg: "User Not Found ❌" });
+      return res.status(404).json({ msg: "User Not Found ❌" });
     } else
-      return res.status(200).send({
-        msg: `Account deleted ❌. We are sorry to let you go ${fname} 😢`,
-      });
+      return res
+        .status(200)
+        .json({
+          error: false,
+          msg: `Account deleted ❌. We are sorry to let you go ${fname} 😢`,
+        });
   } catch (err) {
-    return res.status(500).send({
+    return res.status(500).json({
       err,
+      error: true,
       message: err.message || `⚠ Could not delete user with ${email}`,
     });
   }

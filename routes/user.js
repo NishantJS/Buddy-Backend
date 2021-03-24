@@ -23,7 +23,6 @@ user.post("/register/", async (req, res) => {
   else await User._checkOne(req, res);
 });
 
-// ?Validate if user is logged in
 user.use(
   ["/wishlist", "/cart", "/profile", "/dashboard", "/orders"],
   passport.authenticate("jwt", { session: false }),
@@ -31,7 +30,6 @@ user.use(
     try {
       const id = req.user.user;
       const check = await usersPatch._checkId(id);
-
       if (!check.isValid) throw check.error;
       next();
     } catch (e) {
@@ -43,8 +41,8 @@ user.use(
 user.use("/cart", cart);
 user.use("/wishlist", wishlist);
 
-user.get("/", async (_req, res) => {
-  await User._findAll(res);
+user.get("/", async (req, res) => {
+  await User._getOneById(req,res)  
 });
 
 user.delete("/", async (req, res) => {

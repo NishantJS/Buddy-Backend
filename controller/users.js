@@ -30,7 +30,7 @@ const _create = async (req, res) => {
   } catch (err) {
     return res.status(500).json({
       error:true,
-      message: err.message || "⚠ Some error occurred while creating an Account.",
+      msg: err.message || "⚠ Some error occurred while creating an Account.",
     });
   }
 };
@@ -42,7 +42,7 @@ const _findAll = async (res) => {
   } catch (err) {
     return res.status(500).json({
       err,
-      message: err.message || "⚠ Some error occurred while retrieving Users",
+      msg: err.msg || "⚠ Some error occurred while retrieving Users",
     });
   }
 };
@@ -64,7 +64,7 @@ const _checkOne = async (req, res) => {
     return res.status(500).json({
       err,
       error:true,
-      msg: err.message || "⚠ Some error occurred while checking Email",
+      msg: err.msg || "⚠ Some error occurred while checking Email",
     });
   }
 };
@@ -102,12 +102,12 @@ const _findOne = async (req, res) => {
           user: userData,
           msg: "Login Successful",
         });
-      } else return res.status(401).json({ err: "Password is incorrect ❌" ,error: true});
+      } else return res.status(401).json({ msg: "Password is incorrect ❌" ,error: true});
     }
   } catch (err) {
     return res.status(500).json({
       err,
-      message: err.message || `⚠ Error retrieving user with id ${email}`,
+      msg: err.msg || `⚠ Error retrieving user with id ${email}`,
     });
   }
 };
@@ -124,7 +124,7 @@ const _update = async (req, res) => {
     .then((note) => {
       if (!note) {
         return res.status(404).json({
-          message: "Note not found with id " + req.params.noteId,
+          msg: "Note not found with id " + req.params.noteId,
         });
       }
       res.json(note);
@@ -132,11 +132,11 @@ const _update = async (req, res) => {
     .catch((err) => {
       if (err.kind === "ObjectId") {
         return res.status(404).json({
-          message: "Note not found with id " + req.params.noteId,
+          msg: "Note not found with id " + req.params.noteId,
         });
       }
       return res.status(500).json({
-        message: "Error updating note with id " + req.params.noteId,
+        msg: "Error updating note with id " + req.params.noteId,
       });
     });
 };
@@ -161,9 +161,26 @@ const _delete = async (req, res) => {
     return res.status(500).json({
       err,
       error: true,
-      message: err.message || `⚠ Could not delete user with ${email}`,
+      msg: err.message || `⚠ Could not delete user with ${email}`,
     });
   }
 };
 
-export default { _create, _delete, _findAll, _findOne, _update, _checkOne };
+const _getOneById = async (req, res) => {
+  try {
+    let authHeader = req.headers["authorization"];
+    let token = authHeader && authHeader.split(" ");
+
+    if (!authHeader) throw "Session Expired";
+    let data = jwt.verify(token[1], process.env.JWT_SECRET);
+
+    const user = await User.findById(data.user)
+    if (user) return res.status(200).json({ error: false, msg: user })
+    
+    return res.status(401).json({error: true, msg: "Account not fount! Login Again"})
+    
+  } catch (err) {
+    return res.status(401).json({msg: err.message||"Session expired! Please Login Again",error: true})
+  }
+}
+export default { _create, _delete, _findAll, _findOne, _update, _checkOne ,_getOneById};

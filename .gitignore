@@ -1,0 +1,19 @@
+node_modules/**
+node_modules
+nodemon.json
+.prettierignore
+routes/quotes.json
+
+# .env
+# testing
+test.json
+
+testing
+*.rest
+
+vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.code-workspace

@@ -148,16 +148,15 @@ const _findOne = async (req, res) => {
 const _delete = async (req, res) => {
   try {
     const email = req.body.email;
-    const fname = req.body.fname;
-    const user = await User.deleteOne({
+    const seller = await Seller.deleteOne({
       email: new RegExp(`^${email}`, "i"),
     });
-    if (!user.deletedCount) {
-      return res.status(404).json({ msg: "User Not Found ❌" });
+    if (!seller.deletedCount) {
+      return res.status(404).json({ msg: "Seller Not Found ❌" });
     } else
       return res.status(200).json({
         error: false,
-        msg: `Account deleted ❌. We are sorry to let you go ${fname} 😢`,
+        msg: `Account deleted ❌. We are sorry to let you go 😢`,
       });
   } catch (err) {
     return res.status(500).json({
@@ -176,9 +175,9 @@ const _getOneById = async (req, res) => {
     if (!authHeader) throw "Session Expired";
     let data = jwt.verify(token[1], process.env.JWT_SECRET);
 
-    const user = await User.findById(data.user);
-    if (user) return res.status(200).json({ error: false, msg: user });
-
+    const seller = await Seller.findById(data.user);
+    
+    if (seller) return res.status(200).json({ error: false, msg: seller });
     return res
       .status(401)
       .json({ error: true, msg: "Account not fount! Login Again" });

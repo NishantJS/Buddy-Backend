@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 const sellerSchema = new mongoose.Schema({
-  username: { type: String, unique: true },
+  username: { type: String},
   email: { type: String, required: true, unique: true },
   address: [
     {

@@ -174,13 +174,15 @@ const _getOneById = async (req, res) => {
     if (!authHeader) throw "Session Expired";
     let data = jwt.verify(token[1], process.env.JWT_SECRET);
 
-    const user = await User.findById(data.user)
-    if (user) return res.status(200).json({ error: false, msg: user })
+    const userData = await User.findById(data.user);
+    userData.pass = undefined;
+
+    if (userData) return res.status(200).json({ error: false, msg: userData });
     
-    return res.status(401).json({error: true, msg: "Account not fount! Login Again"})
+    return res.status(401).json({ error: true, msg: "Account not fount! Login Again" });
     
   } catch (err) {
-    return res.status(401).json({msg: err.message||"Session expired! Please Login Again",error: true})
+    return res.status(401).json({ msg: err.message || "Session expired! Please Login Again", error: true });
   }
 }
 export default { _create, _delete, _findAll, _findOne, _update, _checkOne ,_getOneById};

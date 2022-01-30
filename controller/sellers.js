@@ -175,9 +175,10 @@ const _getOneById = async (req, res) => {
     if (!authHeader) throw "Session Expired";
     let data = jwt.verify(token[1], process.env.JWT_SECRET);
 
-    const seller = await Seller.findById(data.user);
+    const sellerData = await Seller.findById(data.user);
+    sellerData.pass = undefined;
     
-    if (seller) return res.status(200).json({ error: false, msg: seller });
+    if (sellerData) return res.status(200).json({ error: false, msg: sellerData });
     return res
       .status(401)
       .json({ error: true, msg: "Account not fount! Login Again" });
@@ -185,11 +186,12 @@ const _getOneById = async (req, res) => {
     return res
       .status(401)
       .json({
-        msg: err.message || "Session expired! Please Login Again",
+        msg: "Session expired! Please Login Again",
         error: true,
       });
   }
 };
+
 export default {
   _create,
   _delete,

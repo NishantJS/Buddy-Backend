@@ -5,6 +5,9 @@ const cat = express.Router();
 
 cat.get("/", async (req, res) => {
   try {
+    if (req.body.uci < 200 || req.body.uci > 300)
+      throw "Invalid uci for this path";
+    
     const { error, data } = await _findAll();
     if (error) {
       res.status(500).json({ error: true, data });

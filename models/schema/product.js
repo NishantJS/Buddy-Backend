@@ -20,7 +20,7 @@ const productSchema = new mongoose.Schema({
     retail_price: Number,
     _id: false,
   },
-  seller: { type: String, required: true },
+  seller: { type: mongoose.SchemaTypes.ObjectId, required: true },
 });
 
 export default productSchema;

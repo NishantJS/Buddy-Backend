@@ -12,17 +12,19 @@ shop.use("/dog", dog)
 shop.use("/cat", cat)
 shop.use("/bird", bird)
 
-
-
 shop.get("/", async (req, res) => {
   try {
-  const dog = await findDog();
-  const cat = await findCat();
-  const bird = await findBird();
+    const dog = await findDog();
+    const cat = await findCat();
+    const bird = await findBird();
+    dog.data = undefined;
+    cat.data = undefined;
     res.send({ dog, cat, bird });
     } catch (err) {
     res.send({ err })
   }
 })
+
+
 
 export default shop;

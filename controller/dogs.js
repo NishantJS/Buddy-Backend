@@ -6,7 +6,7 @@ const _create = async (req) => {
     const product = await newProduct.save();
     return {error: false, data: product}
   } catch (err) {
-    return {error: true, data: err || "⚠ Some error occurred while retrieving Users"}
+    return {error: true, data: err || "⚠ Some error occurred while retrieving Product data"}
   }
 };
 
@@ -15,7 +15,7 @@ const _findAll = async () => {
     const product = await Dog.find();
     return {error: false,data:product}
   } catch (err) {
-    return {error: true,data: err.message || "⚠ Some error occurred while retrieving Users"}
+    return {error: true,data: err.message || "⚠ Some error occurred while retrieving Product data"}
   }
 };
 
@@ -26,7 +26,7 @@ const _findOne = async (res) => {
   } catch (err) {
     return res.status(500).json({
       err,
-      message: err.message || "⚠ Some error occurred while retrieving Users",
+      message: err.message || "⚠ Some error occurred while retrieving Product data",
     });
   }
 };

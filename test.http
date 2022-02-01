@@ -1,0 +1,17 @@
+POST http://localhost:5000/shop/dog
+Content-Type: application/json
+
+{
+  "title":"Product 1",
+  "description" : "Product Description",
+  "thumbnail": "https://m.media-amazon.com/images/I/81+lQ7m33jL._SL1500_.jpg",
+  "allowed": "2",
+  "stock": 1000,
+  "size": "normal",
+  "price": {
+    "price": 1699,
+    "retail_price": 1999
+  },
+  "seller": "61e2f58aaff1c523fc1da3f2",
+  "uci": "101"
+}

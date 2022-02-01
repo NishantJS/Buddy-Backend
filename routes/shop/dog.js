@@ -20,6 +20,8 @@ dog.get("/", async (req, res) => {
 
 dog.post("/",async (req, res) => {
   try {
+    if (req.body.uci < 100 || req.body.uci > 200) throw "Invalid uci for this path"
+    
     let { error, data } = await _create(req);
 
     if (error) {

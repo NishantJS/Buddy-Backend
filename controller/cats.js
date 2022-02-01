@@ -8,7 +8,7 @@ const _create = async (req) => {
   } catch (err) {
     return {
       error: true,
-      data: err || "⚠ Some error occurred while retrieving Users",
+      data: err || "⚠ Some error occurred while retrieving Product data",
     };
   }
 };
@@ -20,7 +20,7 @@ const _findAll = async () => {
   } catch (err) {
     return {
       error: true,
-      data: err.message || "⚠ Some error occurred while retrieving Users",
+      data: err.message || "⚠ Some error occurred while retrieving Product data",
     };
   }
 };
@@ -32,7 +32,7 @@ const _findOne = async (res) => {
   } catch (err) {
     return res.status(500).json({
       err,
-      message: err.message || "⚠ Some error occurred while retrieving Users",
+      message: err.message || "⚠ Some error occurred while retrieving Product data",
     });
   }
 };

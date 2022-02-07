@@ -26,11 +26,11 @@ const _create = async (req, res) => {
     sellerData.pass = undefined;
     return res
       .status(201)
-      .json({ error: false, token, seller: sellerData, msg: "Login Successful" });
+      .json({ error: false, token, seller: sellerData, data: "Login Successful" });
   } catch (err) {
     return res.status(500).json({
       error: true,
-      msg: err || "⚠ Some error occurred while creating an Account.",
+      data: err.message || "⚠ Some error occurred while creating an Account.",
     });
   }
 };
@@ -41,8 +41,8 @@ const _findAll = async (res) => {
     return res.status(302).json(sellers);
   } catch (err) {
     return res.status(500).json({
-      err,
-      msg: err.msg || "⚠ Some error occurred while retrieving Users",
+      error: true,
+      data: err.message || "⚠ Some error occurred while retrieving Users",
     });
   }
 };
@@ -57,15 +57,13 @@ const _checkOne = async (req, res) => {
 
     if (seller) {
       return res
-        .status(200)
-        .json({ error: true, msg: `Account exists with ${email} 👯‍♂️` });
+        .status(409)
+        .json({ error: true, data: `Account exists with ${email} 👯‍♂️` });
     } else await _create(req, res);
   } catch (err) {
-    console.log(err)
     return res.status(500).json({
-      err,
       error: true,
-      msg: err.msg || "⚠ Some error occurred while checking Email",
+      data: err.message || "⚠ Some error occurred while checking Email",
     });
   }
 };
@@ -81,7 +79,7 @@ const _findOne = async (req, res) => {
     if (!seller) {
       return res.status(404).json({
         error: true,
-        msg: `Seller account not found with ${email} ❌`,
+        data: `Seller account not found with ${email} ❌`,
       });
     } else if (seller) {
       const { pass } = req.body;
@@ -101,17 +99,17 @@ const _findOne = async (req, res) => {
         return res.status(202).json({
           token,
           seller: sellerData,
-          msg: "Login Successful",
+          data: "Login Successful",
         });
       } else
         return res
           .status(401)
-          .json({ msg: "Password is incorrect ❌", error: true });
+          .json({ data: "Password is incorrect ❌", error: true });
     }
   } catch (err) {
     return res.status(500).json({
       err,
-      msg: err.msg || `⚠ Error retrieving seller account with id ${email}`,
+      data: err.message || `⚠ Error retrieving seller account with id ${email}`,
     });
   }
 };
@@ -148,21 +146,22 @@ const _findOne = async (req, res) => {
 const _delete = async (req, res) => {
   try {
     const email = req.body.email;
+    if (!email) throw new Error("Please pass email address");
+    
     const seller = await Seller.deleteOne({
       email: new RegExp(`^${email}`, "i"),
     });
     if (!seller.deletedCount) {
-      return res.status(404).json({ msg: "Seller Not Found ❌" });
+      return res.status(404).json({ error: true, data : "Seller Not Found ❌" });
     } else
       return res.status(200).json({
         error: false,
-        msg: `Account deleted ❌. We are sorry to let you go 😢`,
+        data: `Account deleted ❌. We are sorry to let you go 😢`,
       });
   } catch (err) {
     return res.status(500).json({
-      err,
       error: true,
-      msg: err.message || `⚠ Could not delete user with ${email}`,
+      data: err.message || `⚠ Could not delete user with ${email}! Please try again later`,
     });
   }
 };
@@ -178,16 +177,16 @@ const _getOneById = async (req, res) => {
     const sellerData = await Seller.findById(data.user);
     sellerData.pass = undefined;
     
-    if (sellerData) return res.status(200).json({ error: false, msg: sellerData });
+    if (sellerData) return res.status(200).json({ error: false, data: sellerData });
     return res
       .status(401)
-      .json({ error: true, msg: "Account not fount! Login Again" });
+      .json({ error: true, data: "Account not fount! Login Again" });
   } catch (err) {
     return res
       .status(401)
       .json({
-        msg: "Session expired! Please Login Again",
         error: true,
+        data: "Session expired! Please Login Again",
       });
   }
 };

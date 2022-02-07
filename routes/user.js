@@ -32,8 +32,8 @@ user.use(
       const check = await usersPatch._checkId(id);
       if (!check.isValid) throw check.error;
       next();
-    } catch (e) {
-      res.status(500).json({ msg: e });
+    } catch (err) {
+      return res.status(500).json({ error: true, data: err.message || "Error checking user id" });
     }
   }
 );

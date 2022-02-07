@@ -1,4 +1,4 @@
-import { Dog } from "../models/index.js"
+import { Dog , ObjectId} from "../models/index.js"
 
 const _create = async (req) => {
   try {    
@@ -6,27 +6,38 @@ const _create = async (req) => {
     const product = await newProduct.save();
     return {error: false, data: product}
   } catch (err) {
-    return {error: true, data: err || "⚠ Some error occurred while retrieving Product data"}
+    return {error: true, data: err.message || "⚠ Some error occurred while retrieving Product data"}
   }
 };
 
 const _findAll = async () => {
   try {
-    const product = await Dog.find();
+    const product = await Dog.find().limit(10);
     return {error: false,data:product}
   } catch (err) {
     return {error: true,data: err.message || "⚠ Some error occurred while retrieving Product data"}
   }
 };
 
-const _findOne = async (res) => {
+const _findOne = async (req,res) => {
   try {
-    const users = await Dog.find();
-    return res.status(302).json(users);
+    if (!ObjectId.isValid(req.params.id)) throw "ObjectId is not Valid";
+    
+    const productData = await Dog.findById(req.params.id);
+
+    if (productData) return res.status(200).json({ error: false, data: productData });
+    
+    return res
+      .status(400)
+      .json({
+        error: true,
+        data: "Product does not available anymore or has been moved",
+      });
+    
   } catch (err) {
     return res.status(500).json({
-      err,
-      message: err.message || "⚠ Some error occurred while retrieving Product data",
+      error: true,
+      data :err.message|| err|| "⚠ Some error occurred while retrieving Product data"
     });
   }
 };

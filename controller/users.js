@@ -26,11 +26,11 @@ const _create = async (req, res) => {
     userData.pass = undefined;
     return res
       .status(201)
-      .json({error:false, token, user: userData, msg: "Login Successful" });
+      .json({error:false, token, user: userData, data: "Login Successful" });
   } catch (err) {
     return res.status(500).json({
       error:true,
-      msg: err || "⚠ Some error occurred while creating an Account.",
+      data: err.message || "⚠ Some error occurred while creating an Account.",
     });
   }
 };
@@ -42,7 +42,7 @@ const _findAll = async (res) => {
   } catch (err) {
     return res.status(500).json({
       err,
-      msg: err.msg || "⚠ Some error occurred while retrieving Users",
+      data: err.message || "⚠ Some error occurred while retrieving Users",
     });
   }
 };
@@ -57,14 +57,14 @@ const _checkOne = async (req, res) => {
 
     if (user) {
       return res.status(200).json({error:true,
-        msg: `Account exists with ${email} 👯‍♂️`,
+        data: `Account exists with ${email} 👯‍♂️`,
       });
     } else await _create(req, res);
   } catch (err) {
     return res.status(500).json({
       err,
       error:true,
-      msg: err.msg || "⚠ Some error occurred while checking Email",
+      data: err.message || "⚠ Some error occurred while checking Email",
     });
   }
 };
@@ -80,7 +80,7 @@ const _findOne = async (req, res) => {
     if (!user) {
       return res.status(404).json({
         error: true,
-        msg: `User not found with ${email} ❌`,
+        data: `User not found with ${email} ❌`,
       });
     } else if (user) {
       const { pass } = req.body;
@@ -100,14 +100,14 @@ const _findOne = async (req, res) => {
         return res.status(202).json({
           token,
           user: userData,
-          msg: "Login Successful",
+          data: "Login Successful",
         });
-      } else return res.status(401).json({ msg: "Password is incorrect ❌" ,error: true});
+      } else return res.status(401).json({ data: "Password is incorrect ❌" ,error: true});
     }
   } catch (err) {
     return res.status(500).json({
       err,
-      msg: err.msg || `⚠ Error retrieving user with id ${email}`,
+      data: err.message || `⚠ Error retrieving user with id ${email}`,
     });
   }
 };
@@ -124,7 +124,7 @@ const _update = async (req, res) => {
     .then((note) => {
       if (!note) {
         return res.status(404).json({
-          msg: "Note not found with id " + req.params.noteId,
+          data: "Note not found with id " + req.params.noteId,
         });
       }
       res.json(note);
@@ -132,11 +132,11 @@ const _update = async (req, res) => {
     .catch((err) => {
       if (err.kind === "ObjectId") {
         return res.status(404).json({
-          msg: "Note not found with id " + req.params.noteId,
+          data: "Note not found with id " + req.params.noteId,
         });
       }
       return res.status(500).json({
-        msg: "Error updating note with id " + req.params.noteId,
+        data: "Error updating note with id " + req.params.noteId,
       });
     });
 };
@@ -149,19 +149,19 @@ const _delete = async (req, res) => {
       email: new RegExp(`^${email}`, "i"),
     });
     if (!user.deletedCount) {
-      return res.status(404).json({ msg: "User Not Found ❌" });
+      return res.status(404).json({ data: "User Not Found ❌" });
     } else
       return res
         .status(200)
         .json({
           error: false,
-          msg: `Account deleted ❌. We are sorry to let you go ${fname} 😢`,
+          data: `Account deleted ❌. We are sorry to let you go ${fname} 😢`,
         });
   } catch (err) {
     return res.status(500).json({
       err,
       error: true,
-      msg: err.message || `⚠ Could not delete user with ${email}`,
+      data: err.message || `⚠ Could not delete user with ${email}`,
     });
   }
 };
@@ -177,12 +177,12 @@ const _getOneById = async (req, res) => {
     const userData = await User.findById(data.user);
     userData.pass = undefined;
 
-    if (userData) return res.status(200).json({ error: false, msg: userData });
+    if (userData) return res.status(200).json({ error: false, data: userData });
     
-    return res.status(401).json({ error: true, msg: "Account not fount! Login Again" });
+    return res.status(401).json({ error: true, data: "Account not fount! Login Again" });
     
   } catch (err) {
-    return res.status(401).json({ msg: err.message || "Session expired! Please Login Again", error: true });
+    return res.status(401).json({ data: err.message || "Session expired! Please Login Again", error: true });
   }
 }
 export default { _create, _delete, _findAll, _findOne, _update, _checkOne ,_getOneById};

@@ -7,16 +7,15 @@ dog.get("/", async (req, res) => {
   try {
     const { error, data } = await _findAll();
     if (error) {
-      res.status(500).json({ error: true, data });
+      return res.status(500).json({ error: true, data });
     } else{
-      res.status(200).json({ error: false, data});
+      return res.status(200).json({ error: false, data});
     }
     
   } catch (err) {
-    res.status(500).json({ error: true, data : err});
+    return res.status(500).json({ error: true, data : err.message || err});
   }
 })
-
 
 dog.post("/",async (req, res) => {
   try {

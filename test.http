@@ -2,7 +2,7 @@ POST http://localhost:5000/shop/dog
 Content-Type: application/json
 
 {
-  "title":"Product 1",
+  "title":"Product 1 77777777 777777777 7777777777777 777777777777777777777777777777777",
   "description" : "Product Description",
   "thumbnail": "https://m.media-amazon.com/images/I/81+lQ7m33jL._SL1500_.jpg",
   "allowed": "2",

@@ -33,9 +33,9 @@ quote.get("/:id", async (req, res) => {
     if (req.params.id >= 0 && req.params.id <= quotes.length - 1) {
       res.status(200).json(quotes[req.params.id]);
     }
-    else throw "Out of Range";
+    else throw new RangeError("Out of Range");
   } catch (error) {
-    res.status(500).json({error })
+    res.status(500).json({error})
   }
 });
 

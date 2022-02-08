@@ -19,7 +19,7 @@ const _updateCartAdd = async (id, updateData) => {
       {
         $addToSet: {
           cart: {
-            _id: updateData.id,
+            _id: updateData._id,
             price: updateData.price,
             title: updateData.title,
           },
@@ -32,7 +32,7 @@ const _updateCartAdd = async (id, updateData) => {
     return {
       error: true,
       isValid: false,
-      err: err.message||"Wrong Token. Please Login Again!",
+      data: err.message||"Wrong Token. Please Login Again!",
     };
   }
 };
@@ -44,17 +44,17 @@ const _updateCartRemove = async (id, updateData) => {
       id,
       {
         $pull: {
-          cart: { _id: updateData.id },
+          cart: { _id: updateData._id },
         },
       },
       { new: true }
     );
-    return { isValid: true, updatedData,error: false };
+    return { isValid: true, data: updatedData,error: false };
   } catch (err) {
     return {
       error: true,
       isValid: false,
-      err: err.message || "Wrong Token. Please Login Again!",
+      data: err.message || "Wrong Token. Please Login Again!",
     };
   }
 };
@@ -67,7 +67,7 @@ const _updateWishListAdd = async (id, updateData) => {
       {
         $addToSet: {
           wishlist: {
-            _id: updateData.id,
+            _id: updateData._id,
             price: updateData.price,
             title: updateData.title,
           },
@@ -75,12 +75,12 @@ const _updateWishListAdd = async (id, updateData) => {
       },
       { new: true }
     );
-    return { error: false, isValid: true, updatedData };
+    return { error: false, isValid: true, data: updatedData };
   } catch (err) {
     return {
       error: true,
       isValid: false,
-      err: err.message || "Wrong Token. Please Login Again!",
+      data: err.message || "Wrong Token. Please Login Again!",
     };
   }
 };
@@ -97,12 +97,12 @@ const _updateWishListRemove = async (id, updateData) => {
       },
       { new: true }
     );
-    return { error: false, isValid: true, updatedData };
+    return { error: false, isValid: true, data: updatedData };
   } catch (err) {
     return {
       error: true,
       isValid: false,
-      err: err.message|| "Wrong Token. Please Login Again!",
+      data: err.message|| "Wrong Token. Please Login Again!",
     };
   }
 };

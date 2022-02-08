@@ -171,7 +171,7 @@ const _getOneById = async (req, res) => {
     let authHeader = req.headers["authorization"];
     let token = authHeader && authHeader.split(" ");
 
-    if (!authHeader) throw "Session Expired";
+    if (!authHeader) throw new Error("Session expired! Please Login Again");
     let data = jwt.verify(token[1], process.env.JWT_SECRET);
 
     const userData = await User.findById(data.user);

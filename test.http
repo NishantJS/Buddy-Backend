@@ -15,3 +15,27 @@ Content-Type: application/json
   "seller": "61e2f58aaff1c523fc1da3f2",
   "uci": "101"
 }
+
+###
+
+PATCH http://localhost:5000/user/cart/add
+Content-Type: application/json
+Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjFlMmY0NGQyODMxNzkxYjE4NTIxMDUzIiwiaWF0IjoxNjQ0MzA3OTA4LCJleHAiOjE2NDQ1NjcxMDh9.vyXX_FNjgLESoDgyrAR-uGrqZnE_eXt_K7erzNgDrDc
+
+{
+  "cart":{
+    "_id":"620233d5adb0ed0cf0e2c277"
+  }
+}
+
+###
+
+PATCH http://localhost:5000/user/cart/remove
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjFlMmY0NGQyODMxNzkxYjE4NTIxMDUzIiwiaWF0IjoxNjQ0MzA3OTA4LCJleHAiOjE2NDQ1NjcxMDh9.vyXX_FNjgLESoDgyrAR-uGrqZnE_eXt_K7erzNgDrDc
+
+{
+  "cart":{
+    "_id":"620233d5adb0ed0cf0e2c277"
+  }
+}

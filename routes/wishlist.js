@@ -5,39 +5,41 @@ const wishlist = express.Router();
 
 wishlist.patch("/add", async (req, res) => {
   try {
-    if (req.body.wishlist) {
-      let wishlist = req.body.wishlist;
+    if (req.body?._id) {
+      let wishlist = req.body;
       let id = req.user.user;
 
       const update = await UserPatch._updateWishListAdd(id, wishlist);
 
-      if (!update.isValid) throw update.err;
+      if (!update.isValid) throw update.data;
       else
-        res
+        return res
           .status(200)
-          .json({ user: update.updatedData, msg: "Update Successful" });
-    } else throw { msg: "Wishlist Data Not found" };
+          .json({ user: update.data, data: "Update Successful" });
+    } else throw new Error("Wishlist Data Not found");
   } catch (error) {
-    res.status(500).json({ error });
+    return res.status(500).json({ error: true, data: error.message });
   }
 });
 
+// todo fix remove wishlist 
+
 wishlist.patch("/remove", async (req, res) => {
   try {
-    if (req.body.wishlist) {
-      let wishlist = req.body.wishlist;
+    if (req.body?._id) {
+      let wishlist = req.body;
       let id = req.user.user;
 
       const update = await UserPatch._updateWishListRemove(id, wishlist);
 
-      if (!update.isValid) throw update.err;
+      if (!update.isValid) throw update.data;
       else
-        res
+        return res
           .status(200)
-          .json({ user: update.updatedData, msg: "Update Successful" });
-    } else throw { msg: "Wishlist Data Not found" };
+          .json({ user: update.data, message: "Update Successful" });
+    } else throw new Error("Wishlist Data Not found");
   } catch (error) {
-    res.status(500).json({ error });
+    return res.status(500).json({ error:true, data: error.message });
   }
 });
 

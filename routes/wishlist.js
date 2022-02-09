@@ -11,18 +11,16 @@ wishlist.patch("/add", async (req, res) => {
 
       const update = await UserPatch._updateWishListAdd(id, wishlist);
 
-      if (!update.isValid) throw update.data;
+      if (!update.isValid) throw new Error(update.data);
       else
         return res
           .status(200)
-          .json({ user: update.data, data: "Update Successful" });
+          .json({ error: false, data: "Item added to wishlist" });
     } else throw new Error("Wishlist Data Not found");
   } catch (error) {
     return res.status(500).json({ error: true, data: error.message });
   }
 });
-
-// todo fix remove wishlist 
 
 wishlist.patch("/remove", async (req, res) => {
   try {
@@ -36,7 +34,7 @@ wishlist.patch("/remove", async (req, res) => {
       else
         return res
           .status(200)
-          .json({ user: update.data, message: "Update Successful" });
+          .json({ error: false, data: "Item removed from wishlist" });
     } else throw new Error("Wishlist Data Not found");
   } catch (error) {
     return res.status(500).json({ error:true, data: error.message });

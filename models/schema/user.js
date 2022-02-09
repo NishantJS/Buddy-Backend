@@ -24,8 +24,10 @@ const userSchema = new mongoose.Schema({
       uci: Number,
       price: {
         price: Number,
-        retail: String,
+        retail_price: Number,
       },
+      thumbnail: String,
+      size: String,
     },
   ],
   wishlist: [
@@ -35,8 +37,10 @@ const userSchema = new mongoose.Schema({
       uci: Number,
       price: {
         price: Number,
-        retail: String,
+        retail_price: Number,
       },
+      thumbnail: String,
+      size: String,
     },
   ],
   orders: [
@@ -48,9 +52,10 @@ const userSchema = new mongoose.Schema({
         price: Number,
         retail: String,
       },
+      status: Number
     },
   ],
-  pass: String,
+  pass: { type: String, required: true },
 });
 
 export default userSchema;

@@ -22,6 +22,9 @@ const _updateCartAdd = async (id, updateData) => {
             _id: updateData._id,
             price: updateData.price,
             title: updateData.title,
+            thumbnail: updateData.thumbnail,
+            allowed: updateData.allowed,
+            size: updateData.size
           },
         },
       },
@@ -70,11 +73,20 @@ const _updateWishListAdd = async (id, updateData) => {
             _id: updateData._id,
             price: updateData.price,
             title: updateData.title,
+            thumbnail: updateData.thumbnail,
+            allowed: updateData.allowed,
+            size: updateData.size,
           },
         },
       },
       { new: true }
     );
+    if(!updatedData) return {
+      error: true,
+      isValid: false,
+      data: "Make sure you are providing all parameters while making an API call",
+    };
+
     return { error: false, isValid: true, data: updatedData };
   } catch (err) {
     return {
@@ -92,7 +104,7 @@ const _updateWishListRemove = async (id, updateData) => {
       id,
       {
         $pull: {
-          wishlist: { _id: updateData.id },
+          wishlist: { _id: updateData._id },
         },
       },
       { new: true }

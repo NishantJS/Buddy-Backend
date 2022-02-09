@@ -8,8 +8,8 @@ const max = [
 ];
 
 const productSchema = new mongoose.Schema({
-  title: { type: String, required: true, trim: true },
-  description: { type: String, required: true, trim: true },
+  title: { type: String, required: true, trim: true, minLength: 3, maxLength: 90 },
+  description: { type: String, required: true, trim: true, minLength: 200, maxLength: 1000 },
   thumbnail: { type: String, required: true },
   allowed: Number,
   uci: { type: Number, required: true, min, max },

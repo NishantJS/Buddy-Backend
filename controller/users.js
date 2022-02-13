@@ -62,7 +62,6 @@ const _checkOne = async (req, res) => {
     } else await _create(req, res);
   } catch (err) {
     return res.status(500).json({
-      err,
       error:true,
       data: err.message || "⚠ Some error occurred while checking Email",
     });
@@ -101,12 +100,13 @@ const _findOne = async (req, res) => {
           token,
           user: userData,
           data: "Login Successful",
+          error: false
         });
       } else return res.status(401).json({ data: "Password is incorrect ❌" ,error: true});
     }
   } catch (err) {
     return res.status(500).json({
-      err,
+      error: true,
       data: err.message || `⚠ Error retrieving user with id ${email}`,
     });
   }
@@ -149,7 +149,7 @@ const _delete = async (req, res) => {
       email: new RegExp(`^${email}`, "i"),
     });
     if (!user.deletedCount) {
-      return res.status(404).json({ data: "User Not Found ❌" });
+      return res.status(404).json({error:true, data: "User Not Found ❌" });
     } else
       return res
         .status(200)
@@ -159,7 +159,6 @@ const _delete = async (req, res) => {
         });
   } catch (err) {
     return res.status(500).json({
-      err,
       error: true,
       data: err.message || `⚠ Could not delete user with ${email}`,
     });

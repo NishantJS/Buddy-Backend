@@ -100,6 +100,7 @@ const _findOne = async (req, res) => {
           token,
           seller: sellerData,
           data: "Login Successful",
+          error: false
         });
       } else
         return res
@@ -108,7 +109,7 @@ const _findOne = async (req, res) => {
     }
   } catch (err) {
     return res.status(500).json({
-      err,
+      error: true,
       data: err.message || `⚠ Error retrieving seller account with id ${email}`,
     });
   }

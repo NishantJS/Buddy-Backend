@@ -13,6 +13,7 @@ user.post("/login", async (req, res) => {
   const { errors, isValid } = loginValidator(req.body);
 
   if (!isValid) return res.status(400).json(errors);
+
   else await User._findOne(req, res);
 });
 
@@ -24,7 +25,7 @@ user.post("/register", async (req, res) => {
 });
 
 user.use(
-  ["/wishlist", "/cart", "/profile", "/dashboard", "/orders"],
+  ["/wishlist", "/cart", "/profile", "/orders"],
   passport.authenticate("jwt", { session: false }),
   async (req, res, next) => {
     try {

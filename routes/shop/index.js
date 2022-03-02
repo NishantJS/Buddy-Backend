@@ -17,8 +17,6 @@ shop.get("/", async (req, res) => {
     const dog = await findAllDogProduct();
     const cat = await findAllCatProduct();
     const bird = await findAllBirdProduct();
-    dog.data = undefined;
-    cat.data = undefined;
     return res.status(200).send({ dog, cat, bird });
     } catch (err) {
     return res.status(500).send({ err })

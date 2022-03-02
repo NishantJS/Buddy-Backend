@@ -35,7 +35,7 @@ seller.post("/register", async (req, res) => {
 //   }
 // );
 
-// seller.use("/cart", cart);
+// seller.use("/product", cart);
 // seller.use("/wishlist", wishlist);
 
 seller.get("/", async (req, res) => {

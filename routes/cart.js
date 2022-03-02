@@ -5,7 +5,7 @@ const cart = express.Router();
 
 cart.patch("/add", async (req, res) => {
   try {
-    if (req.body?._id) {
+    if (req.body._id) {
       let cart = req.body;
       let id = req.user.user;
 

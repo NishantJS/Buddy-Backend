@@ -1,9 +1,10 @@
 import { ExtractJwt, Strategy } from "passport-jwt";
 import passport from "passport";
 
-const opt = {};
-opt.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
-opt.secretOrKey = process.env.JWT_SECRET;
+const opt = {
+  jwtFromRequest : ExtractJwt.fromAuthHeaderAsBearerToken(),
+  secretOrKey : process.env.JWT_SECRET
+};
 
 passport.use(
   new Strategy(opt, (jwt_payload, done) => {

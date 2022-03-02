@@ -31,11 +31,11 @@ quote.get("/", async (req, res) => {
 quote.get("/:id", async (req, res) => {
   try {
     if (req.params.id >= 0 && req.params.id <= quotes.length - 1) {
-      res.status(200).json({ error: false, data: quotes[req.params.id] });
+      return res.status(200).json({ error: false, data: quotes[req.params.id] });
     }
     else throw new RangeError("Out of Range");
   } catch (error) {
-    res.status(500).json({error: true, data: error?.message})
+    return res.status(500).json({error: true, data: error?.message})
   }
 });
 

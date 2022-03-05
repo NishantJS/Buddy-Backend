@@ -12,7 +12,7 @@ const _create = async (req) => {
 
 const _findAll = async () => {
   try {
-    const product = await Dog.find().limit(10);
+    const product = await Dog[0].find().limit(10);
     return {error: false,data:product}
   } catch (err) {
     return {error: true,data: err.message || "⚠ Some error occurred while retrieving Product data"}
@@ -23,7 +23,7 @@ const _findOne = async (req,res) => {
   try {
     if (!ObjectId.isValid(req.params.id)) throw "ObjectId is not Valid";
     
-    const productData = await Dog.findById(req.params.id);
+    const productData = await Dog[0].findById(req.params.id);
 
     if (productData) return res.status(200).json({ error: false, data: productData });
     

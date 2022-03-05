@@ -2,7 +2,10 @@ import mongoose from "mongoose";
 
 const sellerSchema = new mongoose.Schema({
   username: String,
-  email: { type: String, required: true, unique: true },
+  email: {
+    type: String,
+    required: true, unique: true
+  },
   address: [
     {
       full_name: String,
@@ -14,19 +17,11 @@ const sellerSchema = new mongoose.Schema({
       phone: [Number],
     },
   ],
-  products: {
-    dog: {
-      food: [{
+  products: [
+    {
       id: mongoose.Schema.Types.ObjectId,
-      title: String,
-      uci: Number,
-      price: {
-        price: Number,
-        retail: String,
-      },
-    },
-  ]}
-  },
+    }
+  ],
   pass: String,
 });
 

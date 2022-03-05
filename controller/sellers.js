@@ -51,9 +51,7 @@ const _checkOne = async (req, res) => {
   try {
     const email = req.body.email;
 
-    const seller = await Seller.findOne({
-      email: new RegExp(`^${email}`, "i"),
-    });
+    const seller = await Seller.findOne({email});
 
     if (seller) {
       return res
@@ -72,9 +70,7 @@ const _findOne = async (req, res) => {
   try {
     const { email } = req.body;
 
-    const seller = await Seller.findOne({
-      email: new RegExp(`^${email}`, "i"),
-    });
+    const seller = await Seller.findOne({email});
 
     if (!seller) {
       return res.status(404).json({

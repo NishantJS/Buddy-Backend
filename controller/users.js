@@ -51,9 +51,7 @@ const _checkOne = async (req, res) => {
   try {
     const email = req.body.email;
 
-    const user = await User.findOne({
-      email: new RegExp(`^${email}`, "i"),
-    });
+    const user = await User.findOne({email});
 
     if (user) {
       return res.status(200).json({error:true,
@@ -72,9 +70,10 @@ const _findOne = async (req, res) => {
   try {
     const { email } = req.body;
 
-    const user = await User.findOne({
-      email: new RegExp(`^${email}`, "i"),
-    });
+    const user = await User.findOne({email});
+
+    // ? i modifier for case insensitive
+    // email: new RegExp(`^${email}`, "i"),
 
     if (!user) {
       return res.status(404).json({
@@ -143,11 +142,8 @@ const _update = async (req, res) => {
 
 const _delete = async (req, res) => {
   try {
-    const email = req.body.email;
-    const fname = req.body.fname;
-    const user = await User.deleteOne({
-      email: new RegExp(`^${email}`, "i"),
-    });
+    const { email, fname } = req.body;
+    const user = await User.deleteOne({email});
     if (!user.deletedCount) {
       return res.status(404).json({error:true, data: "User Not Found ❌" });
     } else
@@ -181,7 +177,10 @@ const _getOneById = async (req, res) => {
     return res.status(401).json({ error: true, data: "Account not fount! Login Again" });
     
   } catch (err) {
-    return res.status(401).json({ data: err.message || "Session expired! Please Login Again", error: true });
+    // !not sending err?.message as if jwt is incorrect or expired it will return "jwt expired"
+    return res
+      .status(401)
+      .json({ data: "Session expired! Please Login Again💥", error: true });
   }
 }
 export default { _create, _delete, _findAll, _findOne, _update, _checkOne ,_getOneById};

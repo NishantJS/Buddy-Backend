@@ -5,7 +5,7 @@ const userSchema = new mongoose.Schema({
     fname: String,
     lname: String,
   },
-  email: { type: String, required: true, unique: true },
+  email: { type: String, required: true, unique: true, trim: true },
   address: [
     {
       full_name: String,
@@ -14,7 +14,7 @@ const userSchema = new mongoose.Schema({
       city: String,
       state: String,
       pin: Number,
-      phone: [Number],
+      phone: [Number]
     },
   ],
   cart: [
@@ -26,7 +26,7 @@ const userSchema = new mongoose.Schema({
         price: Number,
         retail_price: Number,
       },
-      thumbnail: String,
+      thumbnail: [String],
       size: String,
     },
   ],
@@ -39,7 +39,7 @@ const userSchema = new mongoose.Schema({
         price: Number,
         retail_price: Number,
       },
-      thumbnail: String,
+      thumbnail: [String],
       size: String,
     },
   ],
@@ -47,7 +47,6 @@ const userSchema = new mongoose.Schema({
     {
       id: mongoose.Schema.Types.ObjectId,
       title: String,
-      uci: Number,
       price: {
         price: Number,
         retail: String,

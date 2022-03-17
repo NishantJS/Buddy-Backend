@@ -2,11 +2,14 @@ import { Dog , ObjectId} from "../models/index.js"
 
 const _create = async (req) => {
   try {    
-    let newProduct = await new Dog(req.body);
+    let newProduct = await new Dog[parseInt(req.body.uci[2])](req.body);
     const product = await newProduct.save();
     return {error: false, data: product}
+    
   } catch (err) {
-    return {error: true, data: err.message || "⚠ Some error occurred while retrieving Product data"}
+    let errors = err?.errors[Object.keys(err?.errors)[0]].message || err?.message;
+    console.log(errors)
+    return {error: true, data: errors || "⚠ Some error occurred while retrieving Product data"}
   }
 };
 

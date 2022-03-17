@@ -1,8 +1,8 @@
 import mongoose from "mongoose";
 import productSchema from "./product.js";
 
-const minLenth = [0, "Invalide feeding guide value {VALUE}"];
-const maxLength = [30, "Invalide feeding guide value {VALUE}"];
+const minLenth = [0, "Invalid feeding guide value {VALUE}"];
+const maxLength = [30, "Invalid feeding guide value {VALUE}"];
 
 const productFoodSchema = new mongoose.Schema({
   ...productSchema,
@@ -15,8 +15,8 @@ const productFoodSchema = new mongoose.Schema({
       large: { type: Number, minLenth, maxLength },
       x_large: { type: Number, minLenth, maxLength },
     },
-    ingredients: String,
-    note: { type: String, maxLength: [300, "Note size exceeded"] },
+    ingredients: { type: String, maxLength: [300, "Ingredients size exceeded"] },
+    note: { type: String, maxLength: [300, "Note size exceeded"]},
     isVeg: Boolean,
   },
 });

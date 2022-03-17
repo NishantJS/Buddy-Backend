@@ -19,17 +19,18 @@ dog.get("/", async (req, res) => {
 
 dog.post("/",async (req, res) => {
   try {
-    if (req.body.uci < 100 || req.body.uci > 200) throw "Invalid uci for this path"
+    if(!req?.body?.uci) throw new Error("Please provide uci")
+    if (req.body.uci < 100 || req.body.uci > 300) throw new Error("Invalid uci for this path");
     
     let { error, data } = await _create(req);
 
     if (error) {
-      res.status(500).json({ error: true, data });
+      return res.status(500).json({ error: true, data });
     } else {
-      res.status(201).json({ error: false, data });
+      return res.status(201).json({ error: false, data });
     }
   } catch (err) {
-    res.status(500).json({ error: true, data: err });
+    return res.status(500).json({ error: true, data: err?.message || "Something went wrong" });
   }
 });
 

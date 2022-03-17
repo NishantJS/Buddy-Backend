@@ -13,7 +13,7 @@ const _checkId = async (id) => {
 
 const _updateCartAdd = async (id, updateData) => {
   try {
-    if (!mongoose.isValidObjectId(id)) throw error;
+    if (!mongoose.isObjectIdOrHexString(id)) throw error;
     const updatedData = await User.findByIdAndUpdate(
       id,
       {
@@ -42,7 +42,7 @@ const _updateCartAdd = async (id, updateData) => {
 
 const _updateCartRemove = async (id, updateData) => {
   try {
-    if (!mongoose.isValidObjectId(id)) throw error;
+    if (!mongoose.isObjectIdOrHexString(id)) throw error;
     const updatedData = await User.findByIdAndUpdate(
       id,
       {
@@ -64,7 +64,7 @@ const _updateCartRemove = async (id, updateData) => {
 
 const _updateWishListAdd = async (id, updateData) => {
   try {
-    if (!mongoose.isValidObjectId(id)) throw error;
+    if (!mongoose.isObjectIdOrHexString(id)) throw error;
     const updatedData = await User.findByIdAndUpdate(
       id,
       {
@@ -99,7 +99,7 @@ const _updateWishListAdd = async (id, updateData) => {
 
 const _updateWishListRemove = async (id, updateData) => {
   try {
-    if (!mongoose.isValidObjectId(id)) throw error;
+    if (!mongoose.isObjectIdOrHexString(id)) throw error;
     const updatedData = await User.findByIdAndUpdate(
       id,
       {

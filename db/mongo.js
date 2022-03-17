@@ -5,12 +5,8 @@ import mongoose from "mongoose";
 const dbURL = process.env.DB;
 
 mongoose
-  .connect(dbURL, {
-    useNewUrlParser: true,
-    useCreateIndex: true,
-    useUnifiedTopology: true,
-    useFindAndModify: false,
-  })
-  .catch((e) => console.log("Connection to db unsuccessful"+e));
+  .connect(dbURL)
+  .then(()=>console.info("Connection Successful"))
+  .catch((e) => console.error(`Connection to db unsuccessful\n${e?.message}`));
 
 export default mongoose;

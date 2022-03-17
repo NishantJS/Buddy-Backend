@@ -13,22 +13,23 @@ const maxDesc = [
   1100,"Provided description exceeded the word count! Please shorten it",
 ];
 
+const required = [true, "Product {PATH} is required"];
+
 const productSchema = {
-  title: { type: String, required: true, trim: true, minLength: 3, maxLength: 90 },
-  thumbnail: [{ String }],
-  allowed: { type: Number, required: true},
-  uci: { type: Number, required: true, min, max },
-  stock: { type: Number, required: true },
+  title: { type: String, required, trim: true, minLength: [3, "Product name too short"], maxLength: [90,"Product name too long"] },
+  images: [ String ],
+  allowed: { type: Number, required},
+  uci: { type: Number, required, min, max },
+  stock: { type: Number, required},
   price: [{
     size: String,
     price: Number,
     retail_price: Number,
     _id: false,
   }],
-  description: { main: { type: String, minLength: minDesc, maxLength: maxDesc }
-},
-  info_image: [{String}],
-  seller: { type: mongoose.SchemaTypes.ObjectId, required: true },
+  description: { main: { type: String, minLength: minDesc, maxLength: maxDesc ,required}
+  },
+  seller: { type: mongoose.SchemaTypes.ObjectId, required},
 };
 
 export default productSchema;

@@ -19,7 +19,7 @@ server.listen(port);
 const onError = (error) => {
   if (error.syscall !== "listen") throw error;
 
-  console.log("ERROR");
+  console.error("ERROR");
 
   const bind = typeof port === "string" ? "Pipe " + port : "Port " + port;
 
@@ -27,11 +27,9 @@ const onError = (error) => {
     case "EACCES":
       console.error(`${bind} requires elevated privileges`);
       process.exit(1);
-      break;
     case "EADDRINUSE":
       console.error(`${bind} is already in use`);
       process.exit(1);
-      break;
     default:
       throw error;
   }
@@ -39,5 +37,5 @@ const onError = (error) => {
 
 server.on("error", onError);
 server.on("listening", () => {
-  console.log("Listening");
+  console.info("Listening");
 });

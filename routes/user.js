@@ -2,25 +2,24 @@ import express from "express";
 import passport from "passport";
 import User from "../controller/users.js";
 import usersPatch from "../controller/users.patch.js";
-import loginValidator from "../validator/login.js";
-import registerValidator from "../validator/register.js";
+import authValidator from "../validator/auth_sign.js";
 import cart from "./cart.js";
 import wishlist from "./wishlist.js";
 
 const user = express.Router();
 
 user.post("/login", async (req, res) => {
-  const { errors, isValid } = loginValidator(req.body);
+  const { errors, isValid } = authValidator(req.body);
 
-  if (!isValid) return res.status(400).json(errors);
+  if (!isValid) return res.status(400).json({ error: !isValid, data: errors });
 
   else await User._findOne(req, res);
 });
 
 user.post("/register", async (req, res) => {
-  const { errors, isValid } = registerValidator(req.body);
+  const { errors, isValid } = authValidator(req.body);
 
-  if (!isValid) return res.status(400).json(errors);
+  if (!isValid) return res.status(400).json({ error: !isValid, data: errors });
   else await User._checkOne(req, res);
 });
 
@@ -35,7 +34,7 @@ user.use(
       next();
       return
     } catch (err) {
-      return res.status(500).json({ error: true, data: err.message || "Error checking user id" });
+      return res.status(500).json({ error: true, data: err?.message || "Error checking user id" });
     }
   }
 );

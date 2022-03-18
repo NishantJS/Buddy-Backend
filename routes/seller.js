@@ -1,22 +1,21 @@
 import express from "express";
 // import passport from "passport";
 import Seller from "../controller/sellers.js";
-import loginValidator from "../validator/login.js";
-import registerValidator from "../validator/register.js";
+import authValidator from "../validator/auth_sign.js";
 
 const seller = express.Router();
 
 seller.post("/login", async (req, res) => {
-  const { errors, isValid } = loginValidator(req.body);
+  const { errors, isValid } = authValidator(req.body);
 
-  if (!isValid) return res.status(400).json(errors);
+  if (!isValid) return res.status(400).json({ error: !isValid, data: errors });
   else await Seller._findOne(req, res);
 });
 
 seller.post("/register", async (req, res) => {
-  const { errors, isValid } = registerValidator(req.body);
+  const { errors, isValid } = authValidator(req.body);
 
-  if (!isValid) return res.status(400).json(errors);
+  if (!isValid) return res.status(400).json({ error: !isValid, data: errors });
   else await Seller._checkOne(req, res);
 });
 

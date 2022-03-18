@@ -2,18 +2,31 @@ POST http://localhost:5000/shop/dog
 Content-Type: application/json
 
 {
-  "title": "Hello",
+  "title": "Produuuuct",
   "description" : {
-    "main": "hello hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjuuuuuuuuuu"
+    "main": "hello hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjuuuuuuuuuu",
+    "feeding_guide": {
+      "small" : "2 bhhurhfgjhfg uhfurhfuhfkhejr fh ur",
+      "medium" : "3 b",
+      "large" : "4 b"
+    }
   },
-  "thumbnail": "https://m.media-amazon.com/images/I/81+lQ7m33jL._SL1500_.jpg",
+  "images": ["https://m.media-amazon.com/images/I/81+lQ7m33jL._SL1500_.jpg","https://m.media-amazon.com/images/I/81+lQ7m33jL._SL1500_.jpg"],
   "allowed": 2,
   "stock": 1000,
-  "size": "normal",
-  "price": {
+  "price": [{
+    "price": 2699,
+    "retail_price": 2999,
+    "size": "normal"
+  },{
     "price": 1699,
-    "retail_price": 1999
-  },
+    "retail_price": 1999,
+    "size": "normal"
+  },{
+    "price": 1099,
+    "retail_price": 1199,
+    "size": "small"
+  }],
   "seller": "61e2f58aaff1c523fc1da3f2",
   "uci": "100",
   "dddd":"ffff"
@@ -39,4 +52,13 @@ Content-Type: application/json
   "cart":{
     "_id":"620233d5adb0ed0cf0e2c277"
   }
+}
+
+###
+POST http://localhost:5000/user/login
+Content-Type: application/json
+
+{
+  "email": "ssss@gmail.com",
+  "pass": "Nishant"
 }

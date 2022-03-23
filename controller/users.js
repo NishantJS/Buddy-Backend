@@ -72,9 +72,6 @@ const _findOne = async (req, res) => {
 
     const user = await User.findOne({email});
 
-    // ? i modifier for case insensitive
-    // email: new RegExp(`^${email}`, "i"),
-
     if (!user) {
       return res.status(404).json({
         error: true,

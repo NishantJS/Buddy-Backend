@@ -18,10 +18,10 @@ const required = [true, "Product {PATH} is required"];
 const productSchema = {
   title: { type: String, required, trim: true, minLength: [3, "Product name too short"], maxLength: [90,"Product name too long"] },
   images: [{ type: String }],
-  allowed: { type: Number, required},
+  allowed: { type: Number, default: 5, max:5},
   uci: { type: Number, required, min, max },
   stock: { type: Number, required},
-  price: [{
+  sizes: [{
     size: String,
     price: Number,
     retail_price: Number,

@@ -1,31 +1,31 @@
-POST http://localhost:5000/shop/dog
+POST http://localhost:5000/seller/product/add
+Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWxsZXIiOiI2MjM5OGUwMDE1ZmNlY2EyODA0Nzk5YzUiLCJpYXQiOjE2NDc5MzkwNzIsImV4cCI6MTY0ODE5ODI3Mn0.BjpCKhtsRswkFjMuaH0JT19MsygU4F03Bc_rEeuQBVo
 Content-Type: application/json
 
 {
-  "title": "Produuuuct",
+  "title": "Product 1",
   "description" : {
-    "main": "hello hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjuuuuuuuuuu",
+    "main": "hello hhhhhhhhhhhhh hhhhhhhhhhhhh hhhhhhhhhh hhhhhhhhhh jjjjjjj jjjjjjj jjjj jjjjjj jjjj j jj jjjjjjjj juuuuuuu uu u",
     "feeding_guide": {
-      "small" : "2 bhhurhfgjhfg uhfurhfuhfkhejr fh ur",
-      "medium" : "3 b",
-      "large" : "4 b"
+      "small" : "2 spoons",
+      "medium" : "3 spoons",
+      "large" : "4 spoons"
     }
   },
-  "images": ["https://m.media-amazon.com/images/I/81+lQ7m33jL._SL1500_.jpg","https://m.media-amazon.com/images/I/81+lQ7m33jL._SL1500_.jpg"],
   "allowed": 2,
   "stock": 1000,
-  "price": [{
-    "price": 2699,
-    "retail_price": 2999,
-    "size": "normal"
+  "sizes": [{
+    "price": 1099,
+    "retail_price": 1199,
+    "size": "small"
   },{
     "price": 1699,
     "retail_price": 1999,
     "size": "normal"
   },{
-    "price": 1099,
-    "retail_price": 1199,
-    "size": "small"
+    "price": 2099,
+    "retail_price": 2199,
+    "size": "large"
   }],
   "seller": "61e2f58aaff1c523fc1da3f2",
   "uci": "100",
@@ -55,10 +55,10 @@ Content-Type: application/json
 }
 
 ###
-POST http://localhost:5000/user/login
+POST http://localhost:5000/seller/register
 Content-Type: application/json
 
 {
-  "email": "ssss@gmail.com",
+  "email": "sssss@gmail.com",
   "pass": "Nishant"
 }

@@ -1,55 +1,59 @@
-import { Cat } from "../models/index.js";
+import { Cat , ObjectId} from "../models/index.js"
 
-const _create = async (req) => {
+const _create = async (body) => {
   try {
-    let newProduct = await new Cat(req.body);
+    let newProduct = await new Cat[body.uci[2]](body);
     const product = await newProduct.save();
-    if (product) return { error: false, data: product }
-    
-    return { error: true, data: "Something went wrong while creating entry for product! Please try again after some time" }
+    return {error: false, data: product}
     
   } catch (err) {
-    return {
-      error: true,
-      data: err.message || "⚠ Some error occurred while retrieving Product data",
-    };
+    let errors = err?.errors[Object.keys(err?.errors)[0]].message || err?.message;
+    return {error: true, data: errors || "⚠ Some error occurred while retrieving Product data"}
   }
 };
 
 const _findAll = async () => {
   try {
-    const product = await Cat.find().limit(10);
-    return { error: false, data: product };
+    const product = await Cat[0].find().limit(10);
+    return {error: false,data:product}
   } catch (err) {
-    return {
-      error: true,
-      data: err.message || "⚠ Some error occurred while retrieving Product data",
-    };
+    return {error: true,data: err.message || "⚠ Some error occurred while retrieving Product data"}
   }
 };
 
-const _findOne = async (req, res) => {
+const _findOne = async (req,res) => {
   try {
     if (!ObjectId.isValid(req.params.id)) throw "ObjectId is not Valid";
     
-    const productData = await Cat.findById(req.params.id);
+    const productData = await Cat[0].findById(req.params.id);
 
-    if (productData)
-      return res.status(200).json({ error: false, data: productData });
-
-    return res.status(400).json({
-      error: true,
-      data: "Product does not available anymore or has been moved",
-    });
+    if (productData) return res.status(200).json({ error: false, data: productData });
+    
+    return res
+      .status(400)
+      .json({
+        error: true,
+        data: "Product does not available anymore or has been moved",
+      });
+    
   } catch (err) {
     return res.status(500).json({
       error: true,
-      data:
-        err.message ||
-        err ||
-        "⚠ Some error occurred while retrieving Product data",
+      data :err.message|| err|| "⚠ Some error occurred while retrieving Product data"
     });
   }
 };
 
-export { _create, _findAll, _findOne };
+// implement delete
+// const _delete = async (req) => {
+//   try {
+//     // let product = await Cat.findByIdAnd
+//   } catch (err) {
+//     return {
+//       error: true,
+//       data: err.message || "⚠ Some error occurred while deleting product. Please try again.",
+//     };
+//   }
+// }
+
+export default { _create, _findAll, _findOne };

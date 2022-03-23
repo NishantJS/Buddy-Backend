@@ -86,7 +86,7 @@ const _findOne = async (req, res) => {
         let sellerData = seller;
         sellerData.pass = undefined;
 
-        const payload = { user: sellerData._id };
+        const payload = { seller: sellerData._id };
 
         const token = jwt.sign(payload, process.env.JWT_SECRET, {
           expiresIn: process.env.JWT_EXPIRES_IN,

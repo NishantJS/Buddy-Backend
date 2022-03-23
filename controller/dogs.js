@@ -1,8 +1,8 @@
 import { Dog , ObjectId} from "../models/index.js"
 
-const _create = async (req) => {
-  try {    
-    let newProduct = await new Dog[parseInt(req.body.uci[2])](req.body);
+const _create = async (body) => {
+  try {
+    let newProduct = await new Dog[body.uci[2]](body);
     const product = await newProduct.save();
     return {error: false, data: product}
     
@@ -56,4 +56,4 @@ const _findOne = async (req,res) => {
 //   }
 // }
 
-export { _create, _findAll, _findOne };
+export default { _create, _findAll, _findOne };

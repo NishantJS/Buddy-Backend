@@ -678,11 +678,6 @@
   dependencies:
     "ci-info" "^2.0.0"
 
-"is-empty@^1.2.0":
-  "integrity" "sha1-3pu1snhzigWgsJpX4ftNSjQan2s="
-  "resolved" "https://registry.npmjs.org/is-empty/-/is-empty-1.2.0.tgz"
-  "version" "1.2.0"
-
 "is-extglob@^2.1.1":
   "integrity" "sha1-qIwCU1eR8C7TfHahueqXc8gz+MI="
   "resolved" "https://registry.npmjs.org/is-extglob/-/is-extglob-2.1.1.tgz"
@@ -904,9 +899,9 @@
     "brace-expansion" "^1.1.7"
 
 "minimist@^1.2.0":
-  "integrity" "sha512-FM9nNUYrRBAELZQT3xeZQ7fmMOBg6nWNmJKTcgsJeaLstP/UODVpGsr5OhXhhXg6f+qtJ8uiZ+PUxkDWcgIXLw=="
-  "resolved" "https://registry.npmjs.org/minimist/-/minimist-1.2.5.tgz"
-  "version" "1.2.5"
+  "integrity" "sha512-Jsjnk4bw3YJqYzbdyBiNsPWHPfO++UGG749Cxs6peCu5Xg4nrena6OVxOYxrQTqww0Jmwt+Ref8rggumkTLz9Q=="
+  "resolved" "https://registry.npmjs.org/minimist/-/minimist-1.2.6.tgz"
+  "version" "1.2.6"
 
 "mongodb-connection-string-url@^2.4.1":
   "integrity" "sha512-tWDyIG8cQlI5k3skB6ywaEA5F9f5OntrKKsT/Lteub2zgwSUlhqEN2inGgBTm8bpYJf8QYBdA/5naz65XDpczA=="
@@ -928,10 +923,10 @@
   optionalDependencies:
     "saslprep" "^1.0.3"
 
-"mongoose@^6.2.6":
-  "integrity" "sha512-OkPM1y7Ed9+Pa2/18mxegcD0OOe/aCXTQvOEyEn/MzVdaRsVSc+zE6myOS4LkWWi30c2tl4fpdJJvgC/MgXiww=="
-  "resolved" "https://registry.npmjs.org/mongoose/-/mongoose-6.2.6.tgz"
-  "version" "6.2.6"
+"mongoose@^6.2.8":
+  "integrity" "sha512-Wq6HG0sOJEQHp5YqMlxrnf93vBFwdY2zlAwqI97EPPSt69kiVV21pTv4cDanrCNWi4upG8ajQ/p9jpDjcECjkQ=="
+  "resolved" "https://registry.npmjs.org/mongoose/-/mongoose-6.2.8.tgz"
+  "version" "6.2.8"
   dependencies:
     "bson" "^4.2.2"
     "kareem" "2.3.4"

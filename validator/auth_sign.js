@@ -1,19 +1,21 @@
-import Validator from "validator";
+import isEmail from 'validator/lib/isEmail.js';
+import isLength from 'validator/lib/isLength.js';
+import isEmpty from 'validator/lib/isEmpty.js';
 
-const validateRegisterInput=({ email, pass }) =>{
+const validateAuthInput=({ email, pass }) =>{
   let errors = "";
 
   if (!email) errors = "Email is required field";
   else if (!pass) errors = "Password is required field";
   else {
-    if (Validator.isEmpty(pass)) errors = "Password field is required";
+    if (isEmpty(pass)) errors = "Password field is required";
 
-    if (Validator.isEmpty(email)) {
+    if (isEmpty(email)) {
       errors = "Email field is required";
-    } else if (!Validator.isEmail(email)) {
+    } else if (!isEmail(email)) {
       errors = "Email is invalid";
     }
-    if (!Validator.isLength(pass, { min: 6, max: 30 }))
+    if (!isLength(pass, { min: 6, max: 30 }))
       errors = "Password must be at least 6 characters and max 30";
   }
   return {
@@ -22,4 +24,4 @@ const validateRegisterInput=({ email, pass }) =>{
   };
 }
 
-export default validateRegisterInput;
+export default validateAuthInput;

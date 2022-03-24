@@ -4,7 +4,7 @@ import jwt from "jsonwebtoken";
 
 const _create = async (req, res) => {
   try {
-    let { email, pass} = req.body;
+    let { email, pass } = req.body;
 
     const saltRounds = 10;
     const salt = await bcrypt.genSalt(saltRounds);
@@ -26,7 +26,12 @@ const _create = async (req, res) => {
     sellerData.pass = undefined;
     return res
       .status(201)
-      .json({ error: false, token, seller: sellerData, data: "Login Successful" });
+      .json({
+        error: false,
+        token,
+        seller: sellerData,
+        data: "Login Successful",
+      });
   } catch (err) {
     return res.status(500).json({
       error: true,
@@ -51,7 +56,7 @@ const _checkOne = async (req, res) => {
   try {
     const email = req.body.email;
 
-    const seller = await Seller.findOne({email});
+    const seller = await Seller.findOne({ email });
 
     if (seller) {
       return res
@@ -70,7 +75,7 @@ const _findOne = async (req, res) => {
   try {
     const { email } = req.body;
 
-    const seller = await Seller.findOne({email});
+    const seller = await Seller.findOne({ email });
 
     if (!seller) {
       return res.status(404).json({
@@ -96,7 +101,7 @@ const _findOne = async (req, res) => {
           token,
           seller: sellerData,
           data: "Login Successful",
-          error: false
+          error: false,
         });
       } else
         return res
@@ -144,12 +149,12 @@ const _delete = async (req, res) => {
   try {
     const email = req.body.email;
     if (!email) throw new Error("Please pass email address");
-    
+
     const seller = await Seller.deleteOne({
       email: new RegExp(`^${email}`, "i"),
     });
     if (!seller.deletedCount) {
-      return res.status(404).json({ error: true, data : "Seller Not Found ❌" });
+      return res.status(404).json({ error: true, data: "Seller Not Found ❌" });
     } else
       return res.status(200).json({
         error: false,
@@ -158,7 +163,9 @@ const _delete = async (req, res) => {
   } catch (err) {
     return res.status(500).json({
       error: true,
-      data: err.message || `⚠ Could not delete user with ${email}! Please try again later`,
+      data:
+        err.message ||
+        `⚠ Could not delete user with ${email}! Please try again later`,
     });
   }
 };
@@ -173,18 +180,17 @@ const _getOneById = async (req, res) => {
 
     const sellerData = await Seller.findById(data.user);
     sellerData.pass = undefined;
-    
-    if (sellerData) return res.status(200).json({ error: false, data: sellerData });
+
+    if (sellerData)
+      return res.status(200).json({ error: false, data: sellerData });
     return res
       .status(401)
       .json({ error: true, data: "Account not fount! Login Again" });
   } catch (err) {
-    return res
-      .status(401)
-      .json({
-        error: true,
-        data: "Session expired! Please Login Again",
-      });
+    return res.status(401).json({
+      error: true,
+      data: "Session expired! Please Login Again",
+    });
   }
 };
 

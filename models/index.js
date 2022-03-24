@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
-// import productSchema from "./schema/product.js "; 
-import productFoodSchema from "./schema/product.food.js "; 
+// import productSchema from "./schema/product.js ";
+import productFoodSchema from "./schema/product.food.js ";
 import userSchema from "./schema/user.js";
 import sellerSchema from "./schema/seller.js";
 const ObjectId = mongoose.Types.ObjectId;

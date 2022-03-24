@@ -12,7 +12,6 @@ user.post("/login", async (req, res) => {
   const { errors, isValid } = authValidator(req.body);
 
   if (!isValid) return res.status(400).json({ error: !isValid, data: errors });
-
   else await User._findOne(req, res);
 });
 
@@ -32,9 +31,11 @@ user.use(
       const check = await usersPatch._checkId(id);
       if (!check.isValid) throw check.error;
       next();
-      return
+      return;
     } catch (err) {
-      return res.status(500).json({ error: true, data: err?.message || "Error checking user id" });
+      return res
+        .status(500)
+        .json({ error: true, data: err?.message || "Error checking user id" });
     }
   }
 );
@@ -43,7 +44,7 @@ user.use("/cart", cart);
 user.use("/wishlist", wishlist);
 
 user.get("/", async (req, res) => {
-  await User._getOneById(req,res)  
+  await User._getOneById(req, res);
 });
 
 user.delete("/", async (req, res) => {

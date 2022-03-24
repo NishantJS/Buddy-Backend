@@ -28,31 +28,29 @@ import upload from "./routes/upload.js";
 // todo remove morgan in production
 app.use(logger("dev"));
 app.use(passport.initialize());
-app.use(cors({ origin : "http://localhost:3000", maxAge: 600}));
+app.use(cors({ origin: "http://localhost:3000", maxAge: 600 }));
 app.use(express.json());
-app.use(express.urlencoded({ extended: true })
-);
+app.use(express.urlencoded({ extended: true }));
 
 app.use((_req, res, next) => {
   // ?Hide server name for security reasons
   res.setHeader("X-Powered-By", "Nginx");
   next();
-})
+});
 
 // ?Use Routers
 app.use(["/user/cart", "/user/wishlist"], cors());
 app.use("/user", user);
-app.use("/quote", quote)
-app.use("/shop", shop)
-app.use("/seller", seller)
-app.use("/upload", upload)
-
+app.use("/quote", quote);
+app.use("/shop", shop);
+app.use("/seller", seller);
+app.use("/upload", upload);
 // app.use(express.static("build"));
 
 // todo add configuration to only allow google fonts in production
 
 app.get("*", function (req, res) {
-  res.send("hello")
+  res.send("hello");
   // res.sendFile("index.html");
 });
 

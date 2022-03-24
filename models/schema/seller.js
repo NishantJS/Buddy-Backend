@@ -4,7 +4,8 @@ const sellerSchema = new mongoose.Schema({
   username: String,
   email: {
     type: String,
-    required: true, unique: true
+    required: true,
+    unique: true,
   },
   address: [
     {
@@ -20,7 +21,7 @@ const sellerSchema = new mongoose.Schema({
   products: [
     {
       id: mongoose.Schema.Types.ObjectId,
-    }
+    },
   ],
   pass: String,
 });

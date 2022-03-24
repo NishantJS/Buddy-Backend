@@ -24,18 +24,18 @@ const _updateCartAdd = async (id, updateData) => {
             title: updateData.title,
             thumbnail: updateData.thumbnail,
             allowed: updateData.allowed,
-            size: updateData.size
+            size: updateData.size,
           },
         },
       },
       { new: true }
     );
-    return { isValid: true, updatedData,error: false };
+    return { isValid: true, updatedData, error: false };
   } catch (err) {
     return {
       error: true,
       isValid: false,
-      data: err.message||"Wrong Token. Please Login Again!",
+      data: err.message || "Wrong Token. Please Login Again!",
     };
   }
 };
@@ -52,7 +52,7 @@ const _updateCartRemove = async (id, updateData) => {
       },
       { new: true }
     );
-    return { isValid: true, data: updatedData,error: false };
+    return { isValid: true, data: updatedData, error: false };
   } catch (err) {
     return {
       error: true,
@@ -81,11 +81,12 @@ const _updateWishListAdd = async (id, updateData) => {
       },
       { new: true }
     );
-    if(!updatedData) return {
-      error: true,
-      isValid: false,
-      data: "Make sure you are providing all parameters while making an API call",
-    };
+    if (!updatedData)
+      return {
+        error: true,
+        isValid: false,
+        data: "Make sure you are providing all parameters while making an API call",
+      };
 
     return { error: false, isValid: true, data: updatedData };
   } catch (err) {
@@ -114,7 +115,7 @@ const _updateWishListRemove = async (id, updateData) => {
     return {
       error: true,
       isValid: false,
-      data: err.message|| "Wrong Token. Please Login Again!",
+      data: err.message || "Wrong Token. Please Login Again!",
     };
   }
 };

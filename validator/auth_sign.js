@@ -1,8 +1,8 @@
-import isEmail from 'validator/lib/isEmail.js';
-import isLength from 'validator/lib/isLength.js';
-import isEmpty from 'validator/lib/isEmpty.js';
+import isEmail from "validator/lib/isEmail.js";
+import isLength from "validator/lib/isLength.js";
+import isEmpty from "validator/lib/isEmpty.js";
 
-const validateAuthInput=({ email, pass }) =>{
+const validateAuthInput = ({ email, pass }) => {
   let errors = "";
 
   if (!email) errors = "Email is required field";
@@ -22,6 +22,6 @@ const validateAuthInput=({ email, pass }) =>{
     errors,
     isValid: !errors,
   };
-}
+};
 
 export default validateAuthInput;

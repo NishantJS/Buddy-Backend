@@ -15,8 +15,11 @@ const productFoodSchema = new mongoose.Schema({
       large: { type: String, minLenth, maxLength },
       x_large: { type: String, minLenth, maxLength },
     },
-    ingredients: { type: String, maxLength: [300, "Ingredients size exceeded"] },
-    note: { type: String, maxLength: [300, "Note size exceeded"]},
+    ingredients: {
+      type: String,
+      maxLength: [300, "Ingredients size exceeded"],
+    },
+    note: { type: String, maxLength: [300, "Note size exceeded"] },
     isVeg: Boolean,
   },
 });

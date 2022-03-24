@@ -59,7 +59,6 @@ const _updateNoteRemove = async (id, updateData) => {
   }
 };
 
-
 export default {
   _updateNoteAdd,
   _updateNoteRemove,

@@ -2,7 +2,7 @@ import express from "express";
 import passport from "passport";
 import Seller from "../controller/sellers.js";
 import authValidator from "../validator/auth_sign.js";
-import sellerPatch from "../controller/seller.patch.js"
+import sellerPatch from "../controller/seller.patch.js";
 import product from "./product.js";
 
 const seller = express.Router();
@@ -34,7 +34,10 @@ seller.use(
     } catch (err) {
       return res
         .status(500)
-        .json({ error: true, data: err?.message || "Error checking seller id" });
+        .json({
+          error: true,
+          data: err?.message || "Error checking seller id",
+        });
     }
   }
 );

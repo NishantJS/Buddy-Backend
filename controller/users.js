@@ -26,10 +26,10 @@ const _create = async (req, res) => {
     userData.pass = undefined;
     return res
       .status(201)
-      .json({error:false, token, user: userData, data: "Login Successful" });
+      .json({ error: false, token, user: userData, data: "Login Successful" });
   } catch (err) {
     return res.status(500).json({
-      error:true,
+      error: true,
       data: err.message || "⚠ Some error occurred while creating an Account.",
     });
   }
@@ -51,16 +51,16 @@ const _checkOne = async (req, res) => {
   try {
     const email = req.body.email;
 
-    const user = await User.findOne({email});
+    const user = await User.findOne({ email });
 
     if (user) {
-      return res.status(200).json({error:true,
-        data: `Account exists with ${email} 👯‍♂️`,
-      });
+      return res
+        .status(200)
+        .json({ error: true, data: `Account exists with ${email} 👯‍♂️` });
     } else await _create(req, res);
   } catch (err) {
     return res.status(500).json({
-      error:true,
+      error: true,
       data: err.message || "⚠ Some error occurred while checking Email",
     });
   }
@@ -70,7 +70,7 @@ const _findOne = async (req, res) => {
   try {
     const { email } = req.body;
 
-    const user = await User.findOne({email});
+    const user = await User.findOne({ email });
 
     if (!user) {
       return res.status(404).json({
@@ -96,9 +96,12 @@ const _findOne = async (req, res) => {
           token,
           user: userData,
           data: "Login Successful",
-          error: false
+          error: false,
         });
-      } else return res.status(401).json({ data: "Password is incorrect ❌" ,error: true});
+      } else
+        return res
+          .status(401)
+          .json({ data: "Password is incorrect ❌", error: true });
     }
   } catch (err) {
     return res.status(500).json({
@@ -140,16 +143,14 @@ const _update = async (req, res) => {
 const _delete = async (req, res) => {
   try {
     const { email, fname } = req.body;
-    const user = await User.deleteOne({email});
+    const user = await User.deleteOne({ email });
     if (!user.deletedCount) {
-      return res.status(404).json({error:true, data: "User Not Found ❌" });
+      return res.status(404).json({ error: true, data: "User Not Found ❌" });
     } else
-      return res
-        .status(200)
-        .json({
-          error: false,
-          data: `Account deleted ❌. We are sorry to let you go ${fname} 😢`,
-        });
+      return res.status(200).json({
+        error: false,
+        data: `Account deleted ❌. We are sorry to let you go ${fname} 😢`,
+      });
   } catch (err) {
     return res.status(500).json({
       error: true,
@@ -170,14 +171,23 @@ const _getOneById = async (req, res) => {
     userData.pass = undefined;
 
     if (userData) return res.status(200).json({ error: false, data: userData });
-    
-    return res.status(401).json({ error: true, data: "Account not fount! Login Again" });
-    
+
+    return res
+      .status(401)
+      .json({ error: true, data: "Account not fount! Login Again" });
   } catch (err) {
     // !not sending err?.message as if jwt is incorrect or expired it will return "jwt expired"
     return res
       .status(401)
       .json({ data: "Session expired! Please Login Again💥", error: true });
   }
-}
-export default { _create, _delete, _findAll, _findOne, _update, _checkOne ,_getOneById};
+};
+export default {
+  _create,
+  _delete,
+  _findAll,
+  _findOne,
+  _update,
+  _checkOne,
+  _getOneById,
+};

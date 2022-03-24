@@ -37,7 +37,7 @@ wishlist.patch("/remove", async (req, res) => {
           .json({ error: false, data: "Item removed from wishlist" });
     } else throw new Error("Wishlist Data Not found");
   } catch (error) {
-    return res.status(500).json({ error:true, data: error.message });
+    return res.status(500).json({ error: true, data: error.message });
   }
 });
 

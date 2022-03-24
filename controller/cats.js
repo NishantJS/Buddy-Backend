@@ -4,7 +4,7 @@ const _create = async (body) => {
   try {
     let newProduct = await new Cat[body.uci[2]](body);
     const product = await newProduct.save();
-    return {error: false, data: product}
+    return {error: false, data: "Product added successfully", product}
     
   } catch (err) {
     let errors = err?.errors[Object.keys(err?.errors)[0]].message || err?.message;

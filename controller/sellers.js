@@ -24,14 +24,12 @@ const _create = async (req, res) => {
     });
 
     sellerData.pass = undefined;
-    return res
-      .status(201)
-      .json({
-        error: false,
-        token,
-        seller: sellerData,
-        data: "Login Successful",
-      });
+    return res.status(201).json({
+      error: false,
+      token,
+      seller: sellerData,
+      data: "Login Successful",
+    });
   } catch (err) {
     return res.status(500).json({
       error: true,
@@ -71,20 +69,16 @@ const _checkOne = async (req, res) => {
   }
 };
 
-const _findOne = async (req, res) => {
+const _findOne = async ({ email, pass }) => {
   try {
-    const { email } = req.body;
-
     const seller = await Seller.findOne({ email });
 
     if (!seller) {
-      return res.status(404).json({
+      return {
         error: true,
         data: `Seller account not found with ${email} ❌`,
-      });
+      };
     } else if (seller) {
-      const { pass } = req.body;
-
       const match = await bcrypt.compare(pass, seller.pass);
 
       if (match) {
@@ -97,22 +91,20 @@ const _findOne = async (req, res) => {
           expiresIn: process.env.JWT_EXPIRES_IN,
         });
 
-        return res.status(202).json({
+        return {
           token,
           seller: sellerData,
           data: "Login Successful",
           error: false,
-        });
-      } else
-        return res
-          .status(401)
-          .json({ data: "Password is incorrect ❌", error: true });
+        };
+      } else return { data: "Password is incorrect ❌", error: true };
     }
-  } catch (err) {
-    return res.status(500).json({
+  } catch (error) {
+    return {
       error: true,
-      data: err.message || `⚠ Error retrieving seller account with id ${email}`,
-    });
+      data:
+        error?.message || `⚠ Error retrieving seller account with id ${email}`,
+    };
   }
 };
 

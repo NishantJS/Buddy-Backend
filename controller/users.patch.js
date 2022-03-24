@@ -31,11 +31,11 @@ const _updateCartAdd = async (id, updateData) => {
       { new: true }
     );
     return { isValid: true, updatedData, error: false };
-  } catch (err) {
+  } catch (error) {
     return {
       error: true,
       isValid: false,
-      data: err.message || "Wrong Token. Please Login Again!",
+      data: error?.message || "Wrong Token. Please Login Again!",
     };
   }
 };

@@ -17,7 +17,7 @@ const _create = async (body) => {
 
 const _findAll = async () => {
   try {
-    const product = await Dog[0].find().limit(10);
+    const product = await Dog[0].find().limit(10).lean();
     return { error: false, data: product };
   } catch (err) {
     return {

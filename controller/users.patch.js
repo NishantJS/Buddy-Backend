@@ -13,18 +13,17 @@ const _checkId = async (id) => {
 
 const _updateCartAdd = async (id, updateData) => {
   try {
-    if (!mongoose.isObjectIdOrHexString(id)) throw error;
+    if (!mongoose.isObjectIdOrHexString(id)) throw new Error("Invalid ID");
     const updatedData = await User.findByIdAndUpdate(
       id,
       {
         $addToSet: {
           cart: {
             _id: updateData._id,
-            price: updateData.price,
             title: updateData.title,
             thumbnail: updateData.thumbnail,
+            sizes: updateData.sizes,
             allowed: updateData.allowed,
-            size: updateData.size,
           },
         },
       },
@@ -42,7 +41,7 @@ const _updateCartAdd = async (id, updateData) => {
 
 const _updateCartRemove = async (id, updateData) => {
   try {
-    if (!mongoose.isObjectIdOrHexString(id)) throw error;
+    if (!mongoose.isObjectIdOrHexString(id)) throw new Error("Invalid ID");
     const updatedData = await User.findByIdAndUpdate(
       id,
       {
@@ -64,18 +63,17 @@ const _updateCartRemove = async (id, updateData) => {
 
 const _updateWishListAdd = async (id, updateData) => {
   try {
-    if (!mongoose.isObjectIdOrHexString(id)) throw error;
+    if (!mongoose.isObjectIdOrHexString(id)) throw new Error("Invalid ID");
     const updatedData = await User.findByIdAndUpdate(
       id,
       {
         $addToSet: {
           wishlist: {
             _id: updateData._id,
-            price: updateData.price,
             title: updateData.title,
             thumbnail: updateData.thumbnail,
+            sizes: updateData.sizes,
             allowed: updateData.allowed,
-            size: updateData.size,
           },
         },
       },
@@ -100,7 +98,7 @@ const _updateWishListAdd = async (id, updateData) => {
 
 const _updateWishListRemove = async (id, updateData) => {
   try {
-    if (!mongoose.isObjectIdOrHexString(id)) throw error;
+    if (!mongoose.isObjectIdOrHexString(id)) throw new Error("Invalid ID");
     const updatedData = await User.findByIdAndUpdate(
       id,
       {

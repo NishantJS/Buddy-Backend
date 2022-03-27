@@ -27,26 +27,26 @@ const userSchema = new mongoose.Schema({
     {
       id: mongoose.Schema.Types.ObjectId,
       title: String,
-      uci: Number,
-      price: {
+      sizes: {
+        size: String,
         price: Number,
         retail_price: Number,
       },
-      thumbnail: [String],
-      size: String,
+      thumbnail: String,
+      allowed: Number,
     },
   ],
   wishlist: [
     {
       id: mongoose.Schema.Types.ObjectId,
       title: String,
-      uci: Number,
-      price: {
+      sizes: {
+        size: String,
         price: Number,
         retail_price: Number,
       },
-      thumbnail: [String],
-      size: String,
+      thumbnail: String,
+      allowed: Number,
     },
   ],
   orders: [

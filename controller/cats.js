@@ -30,7 +30,8 @@ const _findAll = async () => {
 
 const _findOne = async (req, res) => {
   try {
-    if (!ObjectId.isValid(req.params.id)) throw "ObjectId is not Valid";
+    if (!ObjectId.isValid(req.params.id))
+      throw new Error("ObjectId is not Valid");
 
     const productData = await Cat[0].findById(req.params.id);
 
@@ -45,9 +46,7 @@ const _findOne = async (req, res) => {
     return res.status(500).json({
       error: true,
       data:
-        err.message ||
-        err ||
-        "⚠ Some error occurred while retrieving Product data",
+        err?.message || "⚠ Some error occurred while retrieving Product data",
     });
   }
 };

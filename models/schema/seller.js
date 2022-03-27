@@ -23,7 +23,7 @@ const sellerSchema = new mongoose.Schema({
       id: mongoose.Schema.Types.ObjectId,
     },
   ],
-  pass: String,
+  pass: { type: String, required: true },
 });
 
 export default sellerSchema;

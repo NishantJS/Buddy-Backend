@@ -8,18 +8,60 @@ import wishlist from "./wishlist.js";
 
 const user = express.Router();
 
-user.post("/login", async (req, res) => {
-  const { errors, isValid } = authValidator(req.body);
+const base64Decode = async (headers) => {
+  try {
+    const credentialNotFound = "Please provide credentials";
+    //? get authorization header with email and password in base64
+    let authHeader = headers?.authorization;
+    if (!authHeader) throw new Error(credentialNotFound);
+    //? convert base64 to utf (not ascii cause email address can be internationalized)
+    const authBuffer = Buffer.from(authHeader.split(" ")[1], "base64");
+    const [email, pass] = authBuffer.toString("utf8").split(":");
+    if (!email || !pass) throw new Error(credentialNotFound);
 
-  if (!isValid) return res.status(400).json({ error: !isValid, data: errors });
-  else await User._findOne(req, res);
+    return { email, pass, error: false };
+  } catch (error) {
+    return {
+      error: true,
+      data: error?.message || "Error getting auth credentials",
+    };
+  }
+};
+
+user.post("/login", async (req, res) => {
+  try {
+    const auth = await base64Decode(req.headers);
+    if (auth.error) throw new Error(auth.data);
+
+    const { errors, isValid } = authValidator(auth);
+    if (!isValid) throw new Error(errors);
+
+    const { error, data, user, token, status } = await User._findOne(auth);
+    const statusCode = status ? status : error ? 500 : 200;
+
+    if (error) return res.status(statusCode).json({ error, data });
+    return res.status(statusCode).json({ error, user, data, token });
+  } catch (error) {
+    return res.status(400).json({ error: true, data: error?.message });
+  }
 });
 
 user.post("/register", async (req, res) => {
-  const { errors, isValid } = authValidator(req.body);
+  try {
+    const auth = await base64Decode(req.headers);
+    if (auth.error) throw new Error(auth.data);
 
-  if (!isValid) return res.status(400).json({ error: !isValid, data: errors });
-  else await User._checkOne(req, res);
+    const { errors, isValid } = authValidator(auth);
+    if (!isValid) throw new Error(errors);
+
+    const { error, data, user, token, status } = await User._checkOne(auth);
+    const statusCode = status ? status : error ? 500 : 200;
+
+    if (error) return res.status(statusCode).json({ error, data });
+    return res.status(statusCode).json({ error, user, data, token });
+  } catch (error) {
+    return res.status(400).json({ error: true, data: error?.message });
+  }
 });
 
 user.use(

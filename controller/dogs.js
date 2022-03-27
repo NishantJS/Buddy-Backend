@@ -17,7 +17,7 @@ const _create = async (body) => {
 
 const _findAll = async () => {
   try {
-    const product = await Dog[0].find().limit(10).lean();
+    const product = await Dog[0].find().limit(5).lean();
     return { error: false, data: product };
   } catch (err) {
     return {
@@ -32,7 +32,7 @@ const _findOne = async (req, res) => {
   try {
     if (!ObjectId.isValid(req.params.id)) throw "ObjectId is not Valid";
 
-    const productData = await Dog[0].findById(req.params.id);
+    const productData = await Dog[0].findById(req.params.id).lean();
 
     if (productData)
       return res.status(200).json({ error: false, data: productData });

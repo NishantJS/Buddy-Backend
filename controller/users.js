@@ -2,10 +2,8 @@ import { User } from "../models/index.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
-const _create = async (req, res) => {
+const _create = async ({ email, pass }) => {
   try {
-    let { email, pass } = req.body;
-
     const saltRounds = 10;
     const salt = await bcrypt.genSalt(saltRounds);
     let hashed = await bcrypt.hash(pass, salt);
@@ -15,23 +13,29 @@ const _create = async (req, res) => {
       pass: hashed,
     });
 
-    const user = await newUser.save();
-    const userData = user;
-    const payload = { user: userData._id };
+    const userData = await newUser.save();
+    if (!userData) throw new Error();
+    let user = userData;
+    const payload = { user: user._id };
 
     const token = jwt.sign(payload, process.env.JWT_SECRET, {
       expiresIn: process.env.JWT_EXPIRES_IN,
     });
 
-    userData.pass = undefined;
-    return res
-      .status(201)
-      .json({ error: false, token, user: userData, data: "Login Successful" });
-  } catch (err) {
-    return res.status(500).json({
+    user.pass = undefined;
+    return {
+      error: false,
+      token,
+      user,
+      data: "Login Successful",
+      status: 201,
+    };
+  } catch (error) {
+    return {
       error: true,
-      data: err.message || "⚠ Some error occurred while creating an Account.",
-    });
+      data:
+        error?.message || "⚠ Some error occurred while creating an Account.",
+    };
   }
 };
 
@@ -39,75 +43,69 @@ const _findAll = async (res) => {
   try {
     const users = await User.find();
     return res.status(302).json(users);
-  } catch (err) {
+  } catch (error) {
     return res.status(500).json({
-      err,
-      data: err.message || "⚠ Some error occurred while retrieving Users",
+      error,
+      data: error?.message || "⚠ Some error occurred while retrieving Users",
     });
   }
 };
 
-const _checkOne = async (req, res) => {
+const _checkOne = async ({ email, pass }) => {
   try {
-    const email = req.body.email;
+    const user = await User.findOne({ email }).lean();
 
-    const user = await User.findOne({ email });
-
-    if (user) {
-      return res
-        .status(200)
-        .json({ error: true, data: `Account exists with ${email} 👯‍♂️` });
-    } else await _create(req, res);
-  } catch (err) {
-    return res.status(500).json({
+    if (user)
+      return {
+        error: true,
+        data: `Account exists with ${email}👯‍♀️`,
+        status: 409,
+      };
+    return await _create({ email, pass });
+  } catch (error) {
+    return {
       error: true,
-      data: err.message || "⚠ Some error occurred while checking Email",
-    });
+      data: error?.message || "⚠ Some error occurred while checking Email",
+    };
   }
 };
 
-const _findOne = async (req, res) => {
+const _findOne = async ({ email, pass }) => {
   try {
-    const { email } = req.body;
-
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email }).lean();
 
     if (!user) {
-      return res.status(404).json({
+      return {
         error: true,
         data: `User not found with ${email} ❌`,
-      });
+        status: 404,
+      };
     } else if (user) {
-      const { pass } = req.body;
-
       const match = await bcrypt.compare(pass, user.pass);
 
       if (match) {
-        let userData = user;
-        userData.pass = undefined;
+        user.pass = undefined;
 
-        const payload = { user: userData._id };
+        const payload = { user: user._id };
 
         const token = jwt.sign(payload, process.env.JWT_SECRET, {
           expiresIn: process.env.JWT_EXPIRES_IN,
         });
 
-        return res.status(202).json({
+        return {
           token,
-          user: userData,
+          user,
           data: "Login Successful",
           error: false,
-        });
+        };
       } else
-        return res
-          .status(401)
-          .json({ data: "Password is incorrect ❌", error: true });
+        return { data: "Password is incorrect ❌", error: true, status: 401 };
     }
-  } catch (err) {
-    return res.status(500).json({
+  } catch (error) {
+    return {
       error: true,
-      data: err.message || `⚠ Error retrieving user with id ${email}`,
-    });
+      data: error?.message || `⚠ Error retrieving user with id ${email}`,
+    };
   }
 };
 
@@ -128,8 +126,8 @@ const _update = async (req, res) => {
       }
       res.json(note);
     })
-    .catch((err) => {
-      if (err.kind === "ObjectId") {
+    .catch((error) => {
+      if (error.kind === "ObjectId") {
         return res.status(404).json({
           data: "Note not found with id " + req.params.noteId,
         });
@@ -151,35 +149,38 @@ const _delete = async (req, res) => {
         error: false,
         data: `Account deleted ❌. We are sorry to let you go ${fname} 😢`,
       });
-  } catch (err) {
+  } catch (error) {
     return res.status(500).json({
       error: true,
-      data: err.message || `⚠ Could not delete user with ${email}`,
+      data: error?.message || `⚠ Could not delete user with ${email}`,
     });
   }
 };
 
-const _getOneById = async (req, res) => {
+const _getOneById = async (req) => {
   try {
     let authHeader = req.headers["authorization"];
     let token = authHeader && authHeader.split(" ");
 
-    if (!authHeader) throw new Error("Session expired! Please Login Again");
+    if (!authHeader) throw new Error();
     let data = jwt.verify(token[1], process.env.JWT_SECRET);
 
-    const userData = await User.findById(data.user);
-    userData.pass = undefined;
+    const user = await User.findById(data.user).lean();
+    if (!user)
+      return {
+        error: true,
+        data: "Account not fount! Login Again",
+        status: 401,
+      };
 
-    if (userData) return res.status(200).json({ error: false, data: userData });
-
-    return res
-      .status(401)
-      .json({ error: true, data: "Account not fount! Login Again" });
-  } catch (err) {
-    // !not sending err?.message as if jwt is incorrect or expired it will return "jwt expired"
-    return res
-      .status(401)
-      .json({ data: "Session expired! Please Login Again💥", error: true });
+    user.pass = undefined;
+    return { error: false, data: user };
+  } catch (error) {
+    return {
+      data: error?.message || "Session expired! Please Login Again💥",
+      error: true,
+      status: 401,
+    };
   }
 };
 export default {

@@ -40,8 +40,15 @@ user.post("/login", async (req, res) => {
     const statusCode = status ? status : error ? 500 : 200;
 
     if (error) return res.status(statusCode).json({ error, data });
-    return res.status(statusCode).json({ error, user, data, token });
+
+    return res
+      .status(statusCode)
+      .cookie("token", token, {
+        httpOnly: true,
+      })
+      .json({ error, user, data, token });
   } catch (error) {
+    console.log(error);
     return res.status(400).json({ error: true, data: error?.message });
   }
 });
@@ -58,7 +65,14 @@ user.post("/register", async (req, res) => {
     const statusCode = status ? status : error ? 500 : 200;
 
     if (error) return res.status(statusCode).json({ error, data });
-    return res.status(statusCode).json({ error, user, data, token });
+
+    return res
+      .status(statusCode)
+      .cookie("token", token, {
+        httpOnly: true,
+        maxAge: Number.parseInt(process.env.JWT_EXPIRES_IN_MS),
+      })
+      .json({ error, user, data, token });
   } catch (error) {
     return res.status(400).json({ error: true, data: error?.message });
   }
@@ -86,7 +100,14 @@ user.use("/cart", cart);
 user.use("/wishlist", wishlist);
 
 user.get("/", async (req, res) => {
-  await User._getOneById(req, res);
+  try {
+    const { error, data, status = 200 } = await User._getOneById(req, res);
+    return res.status(status).json({ error, data });
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ error: true, data: error?.message || "Error checking token" });
+  }
 });
 
 user.delete("/", async (req, res) => {

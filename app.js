@@ -9,26 +9,28 @@ const app = express();
 // ?Import Packages
 import cors from "cors";
 import logger from "morgan";
-// import cookieParser from "cookie-parser";
+import cookieParser from "cookie-parser";
 import passport from "passport";
 
 // ?Setting up Database
 import "./db/mongo.js";
 
 // ?Routers
+import "./auth/jwt.js";
 import user from "./routes/user.js";
 import seller from "./routes/seller.js";
 import shop from "./routes/shop/index.js";
-import "./auth/jwt.js";
 import quote from "./routes/quotes.js";
 import upload from "./routes/upload.js";
 
 // ?Middlewares
-// app.use(cookieParser());
 // todo remove morgan in production
+app.use(cookieParser());
 app.use(logger("dev"));
 app.use(passport.initialize());
-app.use(cors({ origin: "http://localhost:3000", maxAge: 600 }));
+app.use(
+  cors({ origin: "http://localhost:3000", maxAge: 600, credentials: true })
+);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 

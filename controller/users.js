@@ -72,7 +72,7 @@ const _checkOne = async ({ email, pass }) => {
 
 const _findOne = async ({ email, pass }) => {
   try {
-    const user = await User.findOne({ email }).lean();
+    const user = await User.findOne({ email }).select("-__v").lean();
 
     if (!user) {
       return {
@@ -160,12 +160,13 @@ const _delete = async (req, res) => {
 const _getOneById = async (req) => {
   try {
     let authHeader = req.headers["authorization"];
+    if (!authHeader) throw new Error();
     let token = authHeader && authHeader.split(" ");
 
-    if (!authHeader) throw new Error();
-    let data = jwt.verify(token[1], process.env.JWT_SECRET);
+    const data = jwt.verify(token[1], process.env.JWT_SECRET);
+    if (!data) throw new Error();
 
-    const user = await User.findById(data.user).lean();
+    let user = await User.findById(data.user).lean();
     if (!user)
       return {
         error: true,
@@ -177,7 +178,7 @@ const _getOneById = async (req) => {
     return { error: false, data: user };
   } catch (error) {
     return {
-      data: error?.message || "Session expired! Please Login Again💥",
+      data: "Session expired! Please Login Again💥",
       error: true,
       status: 401,
     };

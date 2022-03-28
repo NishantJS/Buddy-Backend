@@ -85,11 +85,12 @@ seller.use("/product", product);
 
 seller.get("/", async (req, res) => {
   try {
-    const { error, data } = await Seller._getOneById(req, res);
-    if (error) throw new Error(data);
-    return res.status(200).json(data);
+    const { error, data, status = 200 } = await Seller._getOneById(req, res);
+    return res.status(status).json({ error, data });
   } catch (error) {
-    return res.status(500).json(error?.message);
+    return res
+      .status(500)
+      .json({ error: true, data: error?.message || "Error checking token" });
   }
 });
 

@@ -166,12 +166,13 @@ const _delete = async (req, res) => {
 const _getOneById = async (req) => {
   try {
     let authHeader = req.headers["authorization"];
+    if (!authHeader) throw new Error();
     let token = authHeader && authHeader.split(" ");
 
-    if (!authHeader) throw new Error("Session Expired");
-    let data = jwt.verify(token[1], process.env.JWT_SECRET);
+    const data = jwt.verify(token[1], process.env.JWT_SECRET);
+    if (!data) throw new Error();
 
-    const seller = await Seller.findById(data.user).lean();
+    let seller = await Seller.findById(data.seller).lean();
     if (!seller)
       return {
         error: true,
@@ -184,7 +185,7 @@ const _getOneById = async (req) => {
   } catch (error) {
     return {
       error: true,
-      data: error?.message || "Session expired! Please Login Again",
+      data: "Session expired! Please Login Again",
       status: 401,
     };
   }

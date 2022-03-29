@@ -163,13 +163,11 @@ const _delete = async (req, res) => {
   }
 };
 
-const _getOneById = async (req) => {
+const _getOneById = async (token) => {
   try {
-    let authHeader = req.headers["authorization"];
-    if (!authHeader) throw new Error();
-    let token = authHeader && authHeader.split(" ");
+    if (!token) throw new Error();
 
-    const data = jwt.verify(token[1], process.env.JWT_SECRET);
+    const data = jwt.verify(token, process.env.JWT_SECRET);
     if (!data) throw new Error();
 
     let seller = await Seller.findById(data.seller).lean();
@@ -181,7 +179,7 @@ const _getOneById = async (req) => {
       };
 
     seller.pass = undefined;
-    return { error: false, data: seller };
+    return { error: false, seller };
   } catch (error) {
     return {
       error: true,
@@ -199,3 +197,5 @@ export default {
   _checkOne,
   _getOneById,
 };
+
+export { _getOneById };

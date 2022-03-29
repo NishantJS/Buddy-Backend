@@ -157,16 +157,11 @@ const _delete = async (req, res) => {
   }
 };
 
-const _getOneById = async (req) => {
+const _getOneById = async (id) => {
   try {
-    let authHeader = req.headers["authorization"];
-    if (!authHeader) throw new Error();
-    let token = authHeader && authHeader.split(" ");
+    if (!id) throw new Error();
 
-    const data = jwt.verify(token[1], process.env.JWT_SECRET);
-    if (!data) throw new Error();
-
-    let user = await User.findById(data.user).lean();
+    let user = await User.findById(id).lean();
     if (!user)
       return {
         error: true,
@@ -175,7 +170,7 @@ const _getOneById = async (req) => {
       };
 
     user.pass = undefined;
-    return { error: false, data: user };
+    return { error: false, user };
   } catch (error) {
     return {
       data: "Session expired! Please Login Again💥",
@@ -184,6 +179,20 @@ const _getOneById = async (req) => {
     };
   }
 };
+
+const _checkId = async (token) => {
+  try {
+    const { user } = jwt.verify(token, process.env.JWT_SECRET);
+    if (!user) throw new Error("Token Invalid! Please login again💥");
+
+    const isValid = await User.findById(user).lean();
+    if (!isValid) throw new Error("Account does not exists");
+    return { isValid: user };
+  } catch (error) {
+    return { isValid: false, data: error?.message };
+  }
+};
+
 export default {
   _create,
   _delete,
@@ -192,4 +201,7 @@ export default {
   _update,
   _checkOne,
   _getOneById,
+  _checkId,
 };
+
+export { _getOneById, _checkId, _checkOne, _findOne };

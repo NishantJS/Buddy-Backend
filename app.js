@@ -22,10 +22,11 @@ import seller from "./routes/seller.js";
 import shop from "./routes/shop/index.js";
 import quote from "./routes/quotes.js";
 import upload from "./routes/upload.js";
+import restoreSession from "./routes/restoreSession.js";
 
 // ?Middlewares
 // todo remove morgan in production
-app.use(cookieParser());
+app.use(cookieParser(process.env.COOKIE_SECRET));
 app.use(logger("dev"));
 app.use(passport.initialize());
 app.use(
@@ -41,17 +42,17 @@ app.use((_req, res, next) => {
 });
 
 // ?Use Routers
-app.use(["/user/cart", "/user/wishlist"], cors());
+app.use("/session", restoreSession);
 app.use("/user", user);
+app.use("/seller", seller);
 app.use("/quote", quote);
 app.use("/shop", shop);
-app.use("/seller", seller);
 app.use("/upload", upload);
 // app.use(express.static("build"));
 
 // todo add configuration to only allow google fonts in production
 
-app.get("*", function (req, res) {
+app.get("*", function (_req, res) {
   res.send("hello");
   // res.sendFile("index.html");
 });

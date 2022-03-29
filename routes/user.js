@@ -1,7 +1,6 @@
 import express from "express";
 import passport from "passport";
-import User from "../controller/users.js";
-import usersPatch from "../controller/users.patch.js";
+import { _checkOne, _checkId, _findOne } from "../controller/users.js";
 import authValidator from "../validator/auth_sign.js";
 import cart from "./cart.js";
 import wishlist from "./wishlist.js";
@@ -36,7 +35,7 @@ user.post("/login", async (req, res) => {
     const { errors, isValid } = authValidator(auth);
     if (!isValid) throw new Error(errors);
 
-    const { error, data, user, token, status } = await User._findOne(auth);
+    const { error, data, user, token, status } = await _findOne(auth);
     const statusCode = status ? status : error ? 500 : 200;
 
     if (error) return res.status(statusCode).json({ error, data });
@@ -44,11 +43,12 @@ user.post("/login", async (req, res) => {
     return res
       .status(statusCode)
       .cookie("token", token, {
+        signed: true,
         httpOnly: true,
+        maxAge: Number.parseInt(process.env.JWT_EXPIRES_IN),
       })
-      .json({ error, user, data, token });
+      .json({ error, user, data });
   } catch (error) {
-    console.log(error);
     return res.status(400).json({ error: true, data: error?.message });
   }
 });
@@ -61,7 +61,7 @@ user.post("/register", async (req, res) => {
     const { errors, isValid } = authValidator(auth);
     if (!isValid) throw new Error(errors);
 
-    const { error, data, user, token, status } = await User._checkOne(auth);
+    const { error, data, user, token, status } = await _checkOne(auth);
     const statusCode = status ? status : error ? 500 : 200;
 
     if (error) return res.status(statusCode).json({ error, data });
@@ -69,10 +69,11 @@ user.post("/register", async (req, res) => {
     return res
       .status(statusCode)
       .cookie("token", token, {
+        signed: true,
         httpOnly: true,
-        maxAge: Number.parseInt(process.env.JWT_EXPIRES_IN_MS),
+        maxAge: Number.parseInt(process.env.JWT_EXPIRES_IN),
       })
-      .json({ error, user, data, token });
+      .json({ error, user, data });
   } catch (error) {
     return res.status(400).json({ error: true, data: error?.message });
   }
@@ -83,14 +84,16 @@ user.use(
   passport.authenticate("jwt", { session: false }),
   async (req, res, next) => {
     try {
-      const id = req.user.user;
-      const check = await usersPatch._checkId(id);
-      if (!check.isValid) throw check.error;
+      const { token } = req.signedCookies;
+      if (!token) throw new Error("Unauthorized");
+      const { isValid, data } = await _checkId(token);
+      if (!isValid) throw new Error(data);
+      req._id = isValid;
       next();
       return;
     } catch (err) {
       return res
-        .status(500)
+        .status(404)
         .json({ error: true, data: err?.message || "Error checking user id" });
     }
   }
@@ -99,19 +102,8 @@ user.use(
 user.use("/cart", cart);
 user.use("/wishlist", wishlist);
 
-user.get("/", async (req, res) => {
-  try {
-    const { error, data, status = 200 } = await User._getOneById(req, res);
-    return res.status(status).json({ error, data });
-  } catch (error) {
-    return res
-      .status(500)
-      .json({ error: true, data: error?.message || "Error checking token" });
-  }
-});
-
 user.delete("/", async (req, res) => {
-  await User._delete(req, res);
+  // await User._delete(req, res);
 });
 
 export default user;

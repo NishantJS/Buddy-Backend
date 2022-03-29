@@ -36,7 +36,14 @@ seller.post("/login", async (req, res) => {
     const statusCode = status ? status : error ? 500 : 200;
 
     if (error) return res.status(statusCode).json({ error, data });
-    return res.status(statusCode).json({ error, seller, data, token });
+    return res
+      .status(statusCode)
+      .cookie("token", token, {
+        httpOnly: true,
+        signed: true,
+        maxAge: Number.parseInt(process.env.JWT_EXPIRES_IN),
+      })
+      .json({ error, seller, data });
   } catch (error) {
     return res.status(400).json({ error: true, data: error?.message });
   }
@@ -46,7 +53,6 @@ seller.post("/register", async (req, res) => {
   try {
     const auth = await base64Decode(req.headers);
     if (auth?.error) throw new Error(auth?.data);
-    console.log(auth);
 
     const { errors, isValid } = authValidator(auth);
     if (!isValid) throw new Error(errors);
@@ -55,7 +61,14 @@ seller.post("/register", async (req, res) => {
     const statusCode = status ? status : error ? 500 : 200;
 
     if (error) return res.status(statusCode).json({ error, data });
-    return res.status(statusCode).json({ error, seller, data, token });
+    return res
+      .status(statusCode)
+      .cookie("token", token, {
+        signed: true,
+        httpOnly: true,
+        maxAge: Number.parseInt(process.env.JWT_EXPIRES_IN),
+      })
+      .json({ error, seller, data });
   } catch (error) {
     return res.status(400).json({ error: true, data: error?.message });
   }
@@ -81,18 +94,6 @@ seller.use(
 );
 
 seller.use("/product", product);
-// seller.use("/wishlist", wishlist);
-
-seller.get("/", async (req, res) => {
-  try {
-    const { error, data, status = 200 } = await Seller._getOneById(req, res);
-    return res.status(status).json({ error, data });
-  } catch (error) {
-    return res
-      .status(500)
-      .json({ error: true, data: error?.message || "Error checking token" });
-  }
-});
 
 seller.delete("/", async (req, res) => {
   await Seller._delete(req, res);

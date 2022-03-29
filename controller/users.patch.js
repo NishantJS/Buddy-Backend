@@ -1,16 +1,6 @@
 import mongoose from "mongoose";
 import { User } from "../models/index.js";
 
-const _checkId = async (id) => {
-  try {
-    const isValid = await User.findById(id);
-    if (!isValid) throw "Account does not exists";
-    return { isValid: true };
-  } catch (error) {
-    return { isValid: false, error };
-  }
-};
-
 const _updateCartAdd = async (id, updateData) => {
   try {
     if (!mongoose.isObjectIdOrHexString(id)) throw new Error("Invalid ID");
@@ -29,11 +19,16 @@ const _updateCartAdd = async (id, updateData) => {
       },
       { new: true }
     );
-    return { isValid: true, updatedData, error: false };
+    if (!updatedData)
+      return {
+        error: true,
+        data: "Make sure you are providing all parameters while making an API call",
+      };
+
+    return { data: updatedData, error: false };
   } catch (error) {
     return {
       error: true,
-      isValid: false,
       data: error?.message || "Wrong Token. Please Login Again!",
     };
   }
@@ -51,12 +46,13 @@ const _updateCartRemove = async (id, updateData) => {
       },
       { new: true }
     );
-    return { isValid: true, data: updatedData, error: false };
-  } catch (err) {
+
+    if (!updatedData) throw new Error();
+    return { data: updatedData, error: false };
+  } catch (error) {
     return {
       error: true,
-      isValid: false,
-      data: err.message || "Wrong Token. Please Login Again!",
+      data: error?.message || "Wrong Token. Please Login Again!",
     };
   }
 };
@@ -82,16 +78,14 @@ const _updateWishListAdd = async (id, updateData) => {
     if (!updatedData)
       return {
         error: true,
-        isValid: false,
         data: "Make sure you are providing all parameters while making an API call",
       };
 
-    return { error: false, isValid: true, data: updatedData };
-  } catch (err) {
+    return { error: false, data: updatedData };
+  } catch (error) {
     return {
       error: true,
-      isValid: false,
-      data: err.message || "Wrong Token. Please Login Again!",
+      data: error?.message || "Wrong Token. Please Login Again!",
     };
   }
 };
@@ -108,12 +102,13 @@ const _updateWishListRemove = async (id, updateData) => {
       },
       { new: true }
     );
-    return { error: false, isValid: true, data: updatedData };
-  } catch (err) {
+
+    if (!updatedData) throw new Error();
+    return { error: false, data: updatedData };
+  } catch (error) {
     return {
       error: true,
-      isValid: false,
-      data: err.message || "Wrong Token. Please Login Again!",
+      data: error?.message || "Wrong Token. Please Login Again!",
     };
   }
 };
@@ -123,5 +118,4 @@ export default {
   _updateWishListAdd,
   _updateCartRemove,
   _updateWishListRemove,
-  _checkId,
 };

@@ -34,6 +34,7 @@ const userSchema = new mongoose.Schema({
       },
       thumbnail: String,
       allowed: Number,
+      variant: { type: Number, default: 0 },
     },
   ],
   wishlist: [
@@ -47,6 +48,7 @@ const userSchema = new mongoose.Schema({
       },
       thumbnail: String,
       allowed: Number,
+      variant: { type: Number, default: 0 },
     },
   ],
   orders: [

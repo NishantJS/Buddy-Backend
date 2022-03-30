@@ -50,9 +50,9 @@ session.get("/", async (req, res) => {
 session.delete("/", async (_req, res) => {
   try {
     return res
-      .clearCookie("token", { httpOnly: true, signed: true })
       .status(200)
-      .json({ error: false });
+      .clearCookie("token", { httpOnly: true, signed: true })
+      .json({ error: false, data: "You are logged out" });
   } catch (error) {
     return res
       .status(500)

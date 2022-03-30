@@ -22,12 +22,12 @@ wishlist.patch("/", async (req, res) => {
   }
 });
 
-wishlist.delete("/:id", async (req, res) => {
+wishlist.delete("/", async (req, res) => {
   try {
-    if (!req.params?.id || !req?.user?.user)
+    if (!req.query?.id || !req?.user?.user || !req.query?.variant)
       throw new Error("Wishlist Data Not found");
 
-    const wishlist = { _id: req.params.id };
+    const wishlist = { _id: req.query.id, variant: req.query.variant };
     const id = req.user.user;
 
     const { error, data } = await UserPatch._updateWishListRemove(id, wishlist);

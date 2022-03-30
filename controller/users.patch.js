@@ -14,6 +14,7 @@ const _updateCartAdd = async (id, updateData) => {
             thumbnail: updateData.thumbnail,
             sizes: updateData.sizes,
             allowed: updateData.allowed,
+            variant: updateData.variant,
           },
         },
       },
@@ -41,7 +42,7 @@ const _updateCartRemove = async (id, updateData) => {
       id,
       {
         $pull: {
-          cart: { _id: updateData._id },
+          cart: { _id: updateData._id, variant: updateData.variant },
         },
       },
       { new: true }
@@ -70,6 +71,7 @@ const _updateWishListAdd = async (id, updateData) => {
             thumbnail: updateData.thumbnail,
             sizes: updateData.sizes,
             allowed: updateData.allowed,
+            variant: updateData.variant,
           },
         },
       },
@@ -97,7 +99,7 @@ const _updateWishListRemove = async (id, updateData) => {
       id,
       {
         $pull: {
-          wishlist: { _id: updateData._id },
+          wishlist: { _id: updateData._id, variant: updateData.variant },
         },
       },
       { new: true }

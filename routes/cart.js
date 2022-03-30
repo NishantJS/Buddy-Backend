@@ -20,12 +20,12 @@ cart.patch("/", async (req, res) => {
   }
 });
 
-cart.delete("/:id", async (req, res) => {
+cart.delete("/", async (req, res) => {
   try {
-    if (!req.params?.id || !req?.user?.user)
+    if (!req.query?.id || !req?.user?.user || !req.query?.variant)
       throw new Error("Cart Data Not Found");
 
-    const cart = { _id: req.params.id };
+    const cart = { _id: req.query.id, variant: req.query.variant };
     const id = req.user.user;
 
     const { error, data } = await UserPatch._updateCartRemove(id, cart);

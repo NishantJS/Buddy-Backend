@@ -4,12 +4,14 @@ nodemon.json
 .prettierignore
 routes/quotes.json
 
-# .env
-# testing
+.env
+env
+testing
 test.json
 
 testing
 *.rest
+
 
 vscode/*
 !.vscode/settings.json

@@ -15,7 +15,11 @@ session.get("/", async (req, res) => {
 
     if (jwtData?.user) {
       const { error, user, data, status = 200 } = await getUser(jwtData.user);
-      if (error) return res.status(status).json({ error, data });
+      if (error)
+        return res
+          .status(status)
+          .clearCookie("token", { signed: true, httpOnly: true })
+          .json({ error, data });
       return res.status(status).json({ error: false, user });
     }
 
@@ -26,7 +30,11 @@ session.get("/", async (req, res) => {
         data,
         status = 200,
       } = await getSeller(jwtData.seller);
-      if (error) return res.status(status).json({ error: false, data });
+      if (error)
+        return res
+          .status(status)
+          .clearCookie("token", { signed: true, httpOnly: true })
+          .json({ error: false, data });
       return res.status(status).json({ error: false, seller });
     }
 
@@ -34,14 +42,15 @@ session.get("/", async (req, res) => {
   } catch (error) {
     return res
       .status(500)
-      .json({ error: true, data: error?.message || "Error checking token" });
+      .clearCookie("token", { signed: true, httpOnly: true })
+      .json({ error: true, data: "Session expired! Please log in again!" });
   }
 });
 
 session.delete("/", async (_req, res) => {
   try {
     return res
-      .clearCookie("token", { httpOnly: true })
+      .clearCookie("token", { httpOnly: true, signed: true })
       .status(200)
       .json({ error: false });
   } catch (error) {

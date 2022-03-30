@@ -79,9 +79,8 @@ seller.use(
   passport.authenticate("jwt", { session: false }),
   async (req, res, next) => {
     try {
-      const id = req.user.seller;
-      const check = await sellerPatch._checkId(id);
-      if (!check.isValid) throw check.error;
+      const { token } = req.signedCookies;
+      if (!token) throw new Error("Unauthorized");
       next();
       return;
     } catch (err) {

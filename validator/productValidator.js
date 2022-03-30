@@ -16,7 +16,7 @@ const errorMessage = (product) => {
       return "Title length should be min 3 and not more than 90";
     if (!stock) return "stock is required field";
     if (!sizes || sizes < 2) return "size is required field";
-    sizes.forEach(({size,price,retail_price}) => {
+    sizes.forEach(({ size, price, retail_price }) => {
       if (!size) throw new Error("size missing");
       if (!price) throw new Error("price missing");
       if (!retail_price) return "retail price missing";

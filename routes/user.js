@@ -86,9 +86,6 @@ user.use(
     try {
       const { token } = req.signedCookies;
       if (!token) throw new Error("Unauthorized");
-      const { isValid, data } = await _checkId(token);
-      if (!isValid) throw new Error(data);
-      req._id = isValid;
       next();
       return;
     } catch (err) {

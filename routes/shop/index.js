@@ -9,7 +9,7 @@ const shop = express.Router();
 shop.use("/dog", dog);
 shop.use("/cat", cat);
 
-shop.get("/", async (req, res) => {
+shop.get("/", async (_req, res) => {
   try {
     const dog = await Dogs._findAll();
     const cat = await Cats._findAll();

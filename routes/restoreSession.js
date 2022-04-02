@@ -18,8 +18,13 @@ session.get("/", async (req, res) => {
       if (error)
         return res
           .status(status)
-          .clearCookie("token", { signed: true, httpOnly: true })
-          .json({ error, data });
+          .clearCookie("token", {
+            signed: true,
+            httpOnly: true,
+            secure: true,
+            sameSite: "strict",
+          })
+          .json({ error, data, a: "h" });
       return res.status(status).json({ error: false, user });
     }
 
@@ -33,7 +38,12 @@ session.get("/", async (req, res) => {
       if (error)
         return res
           .status(status)
-          .clearCookie("token", { signed: true, httpOnly: true })
+          .clearCookie("token", {
+            signed: true,
+            secure: true,
+            httpOnly: true,
+            sameSite: "strict",
+          })
           .json({ error: false, data });
       return res.status(status).json({ error: false, seller });
     }
@@ -42,7 +52,12 @@ session.get("/", async (req, res) => {
   } catch (error) {
     return res
       .status(500)
-      .clearCookie("token", { signed: true, httpOnly: true })
+      .clearCookie("token", {
+        signed: true,
+        sameSite: "strict",
+        secure: true,
+        httpOnly: true,
+      })
       .json({ error: true, data: "Session expired! Please log in again!" });
   }
 });
@@ -51,7 +66,12 @@ session.delete("/", async (_req, res) => {
   try {
     return res
       .status(200)
-      .clearCookie("token", { httpOnly: true, signed: true })
+      .clearCookie("token", {
+        httpOnly: true,
+        signed: true,
+        secure: true,
+        sameSite: "strict",
+      })
       .json({ error: false, data: "You are logged out" });
   } catch (error) {
     return res

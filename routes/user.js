@@ -1,6 +1,6 @@
 import express from "express";
 import passport from "passport";
-import { _checkOne, _checkId, _findOne } from "../controller/users.js";
+import { _checkOne, _findOne } from "../controller/users.js";
 import authValidator from "../validator/auth_sign.js";
 import cart from "./cart.js";
 import wishlist from "./wishlist.js";
@@ -45,6 +45,8 @@ user.post("/login", async (req, res) => {
       .cookie("token", token, {
         signed: true,
         httpOnly: true,
+        sameSite: "strict",
+        secure: true,
         maxAge: Number.parseInt(process.env.JWT_EXPIRES_IN),
       })
       .json({ error, user, data });
@@ -71,6 +73,8 @@ user.post("/register", async (req, res) => {
       .cookie("token", token, {
         signed: true,
         httpOnly: true,
+        secure: true,
+        sameSite: "strict",
         maxAge: Number.parseInt(process.env.JWT_EXPIRES_IN),
       })
       .json({ error, user, data });

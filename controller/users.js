@@ -204,4 +204,4 @@ export default {
   _checkId,
 };
 
-export { _getOneById, _checkId, _checkOne, _findOne };
+export { _checkOne, _findOne, _getOneById };

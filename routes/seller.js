@@ -1,9 +1,8 @@
 import express from "express";
 import passport from "passport";
-import Seller from "../controller/sellers.js";
+import { _checkOne, _findOne } from "../controller/sellers.js";
 import authValidator from "../validator/auth_sign.js";
-import sellerPatch from "../controller/seller.patch.js";
-import product from "./product.js";
+import product from "./shop/product.patch.js";
 
 const seller = express.Router();
 
@@ -32,7 +31,7 @@ seller.post("/login", async (req, res) => {
     const { errors, isValid } = authValidator(auth);
     if (!isValid) throw new Error(errors);
 
-    const { error, data, seller, token, status } = await Seller._findOne(auth);
+    const { error, data, seller, token, status } = await _findOne(auth);
     const statusCode = status ? status : error ? 500 : 200;
 
     if (error) return res.status(statusCode).json({ error, data });
@@ -41,6 +40,8 @@ seller.post("/login", async (req, res) => {
       .cookie("token", token, {
         httpOnly: true,
         signed: true,
+        sameSite: "strict",
+        secure: true,
         maxAge: Number.parseInt(process.env.JWT_EXPIRES_IN),
       })
       .json({ error, seller, data });
@@ -57,7 +58,7 @@ seller.post("/register", async (req, res) => {
     const { errors, isValid } = authValidator(auth);
     if (!isValid) throw new Error(errors);
 
-    const { error, data, seller, token, status } = await Seller._checkOne(auth);
+    const { error, data, seller, token, status } = await _checkOne(auth);
     const statusCode = status ? status : error ? 500 : 200;
 
     if (error) return res.status(statusCode).json({ error, data });
@@ -66,6 +67,8 @@ seller.post("/register", async (req, res) => {
       .cookie("token", token, {
         signed: true,
         httpOnly: true,
+        secure: true,
+        sameSite: "strict",
         maxAge: Number.parseInt(process.env.JWT_EXPIRES_IN),
       })
       .json({ error, seller, data });

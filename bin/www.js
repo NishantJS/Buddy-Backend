@@ -1,5 +1,6 @@
 import app from "../app.js";
-import http from "http";
+import https from "https";
+import { readFileSync } from "fs";
 
 const normalizePort = (val) => {
   const port = parseInt(val, 10);
@@ -11,8 +12,12 @@ const normalizePort = (val) => {
 const port = normalizePort(process.env.PORT || "5000");
 
 app.set("port", port);
+const httpsOptions = {
+  key: readFileSync("./security/cert.key"),
+  cert: readFileSync("./security/cert.pem"),
+};
 
-const server = http.createServer(app);
+const server = https.createServer(httpsOptions, app);
 
 server.listen(port);
 
@@ -37,5 +42,5 @@ const onError = (error) => {
 
 server.on("error", onError);
 server.on("listening", () => {
-  console.info("Listening");
+  console.info("Listening on " + port);
 });

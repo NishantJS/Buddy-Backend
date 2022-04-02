@@ -198,4 +198,4 @@ export default {
   _getOneById,
 };
 
-export { _getOneById };
+export { _checkOne, _findOne, _getOneById };

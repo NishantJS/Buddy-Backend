@@ -12,7 +12,6 @@ test.json
 testing
 *.rest
 
-
 vscode/*
 !.vscode/settings.json
 !.vscode/tasks.json

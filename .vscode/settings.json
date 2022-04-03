@@ -1,0 +1,4 @@
+{
+  "appService.defaultWebAppToDeploy": "/subscriptions/67829a75-0a4f-4926-90cd-bf4e992589de/resourceGroups/buddyshop/providers/Microsoft.Web/sites/buddyshop",
+  "appService.deploySubpath": "."
+}

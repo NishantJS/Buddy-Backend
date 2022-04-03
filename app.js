@@ -1,6 +1,6 @@
 // ?Getting Environmental Variables
-import dotenv from "dotenv";
-dotenv.config();
+import { config } from "dotenv";
+config();
 
 // ?Creating an Express Application
 import express from "express";
@@ -11,7 +11,12 @@ import cors from "cors";
 import logger from "morgan";
 import cookieParser from "cookie-parser";
 import passport from "passport";
+import path from "path";
+import { fileURLToPath } from "url";
+import { dirname } from "path";
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 // ?Setting up Database
 import "./db/mongo.js";
 
@@ -48,13 +53,12 @@ app.use("/seller", seller);
 app.use("/quote", quote);
 app.use("/shop", shop);
 app.use("/upload", upload);
-// app.use(express.static("build"));
+app.use(express.static("build"));
 
 // todo add configuration to only allow google fonts in production
 
 app.get("*", function (_req, res) {
-  res.send("hello");
-  // res.sendFile("index.html");
+  res.sendFile(path.join(__dirname, "build", "index.html"));
 });
 
 export default app;

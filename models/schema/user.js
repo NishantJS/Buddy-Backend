@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 
+const categoryError = "Invalid Category";
 const userSchema = new mongoose.Schema({
   username: {
     fname: String,
@@ -21,6 +22,7 @@ const userSchema = new mongoose.Schema({
       state: String,
       pin: Number,
       phone: [Number],
+      isPrimary: { type: Boolean, default: false },
     },
   ],
   cart: [
@@ -35,6 +37,11 @@ const userSchema = new mongoose.Schema({
       thumbnail: String,
       allowed: Number,
       variant: { type: Number, default: 0 },
+      uci: {
+        type: Number,
+        min: [100, categoryError],
+        max: [300, categoryError],
+      },
     },
   ],
   wishlist: [
@@ -49,6 +56,11 @@ const userSchema = new mongoose.Schema({
       thumbnail: String,
       allowed: Number,
       variant: { type: Number, default: 0 },
+      uci: {
+        type: Number,
+        min: [100, categoryError],
+        max: [300, categoryError],
+      },
     },
   ],
   orders: [
@@ -60,8 +72,17 @@ const userSchema = new mongoose.Schema({
         retail: String,
       },
       status: Number,
+      variant: { type: Number, default: 0 },
+      uci: {
+        type: Number,
+        min: [100, categoryError],
+        max: [300, categoryError],
+      },
     },
   ],
+  temp: {
+    otp: Number,
+  },
   pass: { type: String, required: true },
 });
 

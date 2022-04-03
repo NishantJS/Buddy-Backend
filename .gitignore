@@ -4,8 +4,8 @@ nodemon.json
 .prettierignore
 # routes/quotes.json
 
-# .env
-# env
+.env
+env
 testing
 test.json
 

@@ -2,10 +2,10 @@ node_modules/**
 node_modules
 nodemon.json
 .prettierignore
-routes/quotes.json
+# routes/quotes.json
 
-.env
-env
+# .env
+# env
 testing
 test.json
 

@@ -33,9 +33,10 @@ const userSchema = new mongoose.Schema({
         size: String,
         price: Number,
         retail_price: Number,
+        allowed: Number,
+        stock: Number,
       },
       thumbnail: String,
-      allowed: Number,
       variant: { type: Number, default: 0 },
       uci: {
         type: Number,
@@ -52,9 +53,10 @@ const userSchema = new mongoose.Schema({
         size: String,
         price: Number,
         retail_price: Number,
+        allowed: Number,
+        stock: Number,
       },
       thumbnail: String,
-      allowed: Number,
       variant: { type: Number, default: 0 },
       uci: {
         type: Number,

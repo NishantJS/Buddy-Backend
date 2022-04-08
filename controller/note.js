@@ -1,5 +1,4 @@
-import mongoose from "mongoose";
-import { User } from "../models/index.js";
+import { User, isObjectId } from "../models/index.js";
 
 const _checkId = async (id) => {
   try {
@@ -13,7 +12,7 @@ const _checkId = async (id) => {
 
 const _updateNoteAdd = async (id, updateData) => {
   try {
-    if (!mongoose.isValidObjectId(id)) throw error;
+    if (!isObjectId(id)) throw error;
     const updatedData = await User.findByIdAndUpdate(
       id,
       {
@@ -39,7 +38,7 @@ const _updateNoteAdd = async (id, updateData) => {
 
 const _updateNoteRemove = async (id, updateData) => {
   try {
-    if (!mongoose.isValidObjectId(id)) throw error;
+    if (!isObjectId(id)) throw error;
     const updatedData = await User.findByIdAndUpdate(
       id,
       {

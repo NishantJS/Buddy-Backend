@@ -1,13 +1,13 @@
-import { Dog, ObjectId } from "../models/index.js";
+import { Dog, isObjectId } from "../models/index.js";
 
 const _create = async (body) => {
   try {
-    let newProduct = await new Dog[body.uci[2]](body);
+    const newProduct = await new Dog[body.uci[2]](body);
     const product = await newProduct.save();
     return { error: false, data: "Product added successfully", product };
-  } catch (err) {
-    let errors =
-      err?.errors[Object.keys(err?.errors)[0]].message || err?.message;
+  } catch (error) {
+    const errors =
+      error?.errors[Object.keys(error?.errors)[0]].message || error?.message;
     return {
       error: true,
       data: errors || "⚠ Some error occurred while retrieving Product data",
@@ -19,18 +19,18 @@ const _findAll = async () => {
   try {
     const product = await Dog[0].find().limit(5).lean();
     return { error: false, data: product };
-  } catch (err) {
+  } catch (error) {
     return {
       error: true,
       data:
-        err.message || "⚠ Some error occurred while retrieving Product data",
+        error?.message || "⚠ Some error occurred while retrieving Product data",
     };
   }
 };
 
 const _findOne = async (req, res) => {
   try {
-    if (!ObjectId.isValid(req.params.id)) throw "ObjectId is not Valid";
+    if (!isObjectId(req.params.id)) throw "ObjectId is not Valid";
 
     const productData = await Dog[0].findById(req.params.id).lean();
 
@@ -41,12 +41,12 @@ const _findOne = async (req, res) => {
       error: true,
       data: "Product does not available anymore or has been moved",
     });
-  } catch (err) {
+  } catch (error) {
     return res.status(500).json({
       error: true,
       data:
-        err.message ||
-        err ||
+        error.message ||
+        error ||
         "⚠ Some error occurred while retrieving Product data",
     });
   }
@@ -56,10 +56,10 @@ const _findOne = async (req, res) => {
 // const _delete = async (req) => {
 //   try {
 //     // let product = await Dog.findByIdAnd
-//   } catch (err) {
+//   } catch (error) {
 //     return {
 //       error: true,
-//       data: err.message || "⚠ Some error occurred while deleting product. Please try again.",
+//       data: error.message || "⚠ Some error occurred while deleting product. Please try again.",
 //     };
 //   }
 // }

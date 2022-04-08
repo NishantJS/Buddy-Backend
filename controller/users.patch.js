@@ -1,9 +1,8 @@
-import mongoose from "mongoose";
-import { User } from "../models/index.js";
+import { User, isObjectId } from "../models/index.js";
 
 const _updateCartAdd = async (id, updateData) => {
   try {
-    if (!mongoose.isObjectIdOrHexString(id)) throw new Error("Invalid ID");
+    if (!isObjectId(id)) throw new Error("Invalid ID");
     const updatedData = await User.findByIdAndUpdate(
       id,
       {
@@ -13,7 +12,6 @@ const _updateCartAdd = async (id, updateData) => {
             title: updateData.title,
             thumbnail: updateData.thumbnail,
             sizes: updateData.sizes,
-            allowed: updateData.allowed,
             variant: updateData.variant,
             uci: updateData.uci,
           },
@@ -38,7 +36,7 @@ const _updateCartAdd = async (id, updateData) => {
 
 const _updateCartRemove = async (id, updateData) => {
   try {
-    if (!mongoose.isObjectIdOrHexString(id)) throw new Error("Invalid ID");
+    if (!isObjectId(id)) throw new Error("Invalid ID");
     const updatedData = await User.findByIdAndUpdate(
       id,
       {
@@ -61,7 +59,7 @@ const _updateCartRemove = async (id, updateData) => {
 
 const _updateWishListAdd = async (id, updateData) => {
   try {
-    if (!mongoose.isObjectIdOrHexString(id)) throw new Error("Invalid ID");
+    if (!isObjectId(id)) throw new Error("Invalid ID");
     const updatedData = await User.findByIdAndUpdate(
       id,
       {
@@ -71,7 +69,6 @@ const _updateWishListAdd = async (id, updateData) => {
             title: updateData.title,
             thumbnail: updateData.thumbnail,
             sizes: updateData.sizes,
-            allowed: updateData.allowed,
             variant: updateData.variant,
             uci: updateData.uci,
           },
@@ -96,7 +93,7 @@ const _updateWishListAdd = async (id, updateData) => {
 
 const _updateWishListRemove = async (id, updateData) => {
   try {
-    if (!mongoose.isObjectIdOrHexString(id)) throw new Error("Invalid ID");
+    if (!isObjectId(id)) throw new Error("Invalid ID");
     const updatedData = await User.findByIdAndUpdate(
       id,
       {

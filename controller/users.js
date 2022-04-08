@@ -161,7 +161,7 @@ const _getOneById = async (id) => {
   try {
     if (!id) throw new Error();
 
-    let user = await User.findById(id).lean();
+    const user = await User.findById(id).select("-pass").lean();
     if (!user)
       return {
         error: true,
@@ -169,7 +169,6 @@ const _getOneById = async (id) => {
         status: 401,
       };
 
-    user.pass = undefined;
     return { error: false, user };
   } catch (error) {
     return {

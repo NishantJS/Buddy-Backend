@@ -22,14 +22,21 @@ const productSchema = {
     maxLength: [90, "Product name too long"],
   },
   images: [{ type: String }],
-  allowed: { type: Number, default: 5, max: 5 },
   uci: { type: Number, required, min, max },
-  stock: { type: Number, required },
   sizes: [
     {
       size: String,
       price: Number,
       retail_price: Number,
+      stock: { type: Number, required },
+      allowed: {
+        type: Number,
+        default: 10,
+        max: [
+          99,
+          "Max 99 products are allowed to be purchased for a single transaction",
+        ],
+      },
       _id: false,
     },
   ],

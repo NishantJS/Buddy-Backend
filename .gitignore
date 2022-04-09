@@ -5,7 +5,6 @@ nodemon.json
 routes/quotes.json
 
 .env
-env
 testing
 test.json
 
@@ -20,4 +19,4 @@ vscode/*
 *.code-workspace
 todo.md
 
-security
+security.env

@@ -28,9 +28,26 @@ const _findAll = async () => {
   }
 };
 
+const _findAllWhere = async (uci, excludedID) => {
+  try {
+    const product = await Dog[0]
+      .find({ uci, _id: { $ne: excludedID } })
+      .limit(5)
+      .lean();
+    if (!product) throw new Error();
+    return { error: false, data: product };
+  } catch (error) {
+    return {
+      error: true,
+      data:
+        error?.message || "⚠ Some error occurred while retrieving Product data",
+    };
+  }
+};
+
 const _findOne = async (req, res) => {
   try {
-    if (!isObjectId(req.params.id)) throw "ObjectId is not Valid";
+    if (!isObjectId(req.params.id)) throw new Error("ObjectId is not Valid");
 
     const productData = await Dog[0].findById(req.params.id).lean();
 
@@ -45,9 +62,7 @@ const _findOne = async (req, res) => {
     return res.status(500).json({
       error: true,
       data:
-        error.message ||
-        error ||
-        "⚠ Some error occurred while retrieving Product data",
+        error?.message || "⚠ Some error occurred while retrieving Product data",
     });
   }
 };
@@ -64,4 +79,4 @@ const _findOne = async (req, res) => {
 //   }
 // }
 
-export default { _create, _findAll, _findOne };
+export default { _create, _findAll, _findOne, _findAllWhere };

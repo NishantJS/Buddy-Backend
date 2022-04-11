@@ -163,14 +163,11 @@ const _delete = async (req, res) => {
   }
 };
 
-const _getOneById = async (token) => {
+const _getOneById = async (id) => {
   try {
-    if (!token) throw new Error();
+    if (!id) throw new Error();
 
-    const data = jwt.verify(token, process.env.JWT_SECRET);
-    if (!data) throw new Error();
-
-    let seller = await Seller.findById(data.seller).lean();
+    const seller = await Seller.findById(id).select("-pass").lean();
     if (!seller)
       return {
         error: true,
@@ -178,12 +175,11 @@ const _getOneById = async (token) => {
         status: 401,
       };
 
-    seller.pass = undefined;
     return { error: false, seller };
   } catch (error) {
     return {
+      data: "Session expired! Please Login Again💥",
       error: true,
-      data: "Session expired! Please Login Again",
       status: 401,
     };
   }

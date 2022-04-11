@@ -24,7 +24,7 @@ session.get("/", async (req, res) => {
             secure: true,
             sameSite: "strict",
           })
-          .json({ error, data, a: "h" });
+          .json({ error, data });
       return res.status(status).json({ error: false, user });
     }
 
@@ -44,7 +44,7 @@ session.get("/", async (req, res) => {
             httpOnly: true,
             sameSite: "strict",
           })
-          .json({ error: false, data });
+          .json({ error, data });
       return res.status(status).json({ error: false, seller });
     }
 

@@ -17,9 +17,12 @@ const base64Decode = async (headers) => {
     const [email, pass] = authBuffer.toString("utf8").split(":");
     if (!email || !pass) throw new Error(credentialNotFound);
 
-    return { email, pass };
+    return { email, pass, error: false };
   } catch (error) {
-    return { error: true, data: error?.message };
+    return {
+      error: true,
+      data: error?.message || "Error getting auth credentials",
+    };
   }
 };
 
@@ -35,6 +38,7 @@ seller.post("/login", async (req, res) => {
     const statusCode = status ? status : error ? 500 : 200;
 
     if (error) return res.status(statusCode).json({ error, data });
+
     return res
       .status(statusCode)
       .cookie("token", token, {

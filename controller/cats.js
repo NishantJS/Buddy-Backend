@@ -28,6 +28,23 @@ const _findAll = async () => {
   }
 };
 
+const _findAllWhere = async (uci, excludedID) => {
+  try {
+    const product = await Cat[0]
+      .find({ uci, _id: { $ne: excludedID } })
+      .limit(5)
+      .lean();
+    if (!product) throw new Error();
+    return { error: false, data: product };
+  } catch (error) {
+    return {
+      error: true,
+      data:
+        error?.message || "⚠ Some error occurred while retrieving Product data",
+    };
+  }
+};
+
 const _findOne = async (req, res) => {
   try {
     if (!isObjectId(req.params.id)) throw new Error("ObjectId is not Valid");
@@ -62,4 +79,4 @@ const _findOne = async (req, res) => {
 //   }
 // }
 
-export default { _create, _findAll, _findOne };
+export default { _create, _findAll, _findOne, _findAllWhere };

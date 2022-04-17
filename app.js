@@ -28,6 +28,7 @@ import shop from "./routes/shop/index.js";
 import quote from "./routes/quotes.js";
 import upload from "./routes/upload.js";
 import restoreSession from "./routes/restoreSession.js";
+import images from "./routes/images.js";
 
 // ?Middlewares
 // todo remove morgan in production
@@ -38,7 +39,7 @@ app.use(
   cors({ origin: "http://localhost:3000", maxAge: 600, credentials: true })
 );
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 
 app.use((_req, res, next) => {
   // ?Hide server name for security reasons
@@ -53,6 +54,7 @@ app.use("/seller", seller);
 app.use("/quote", quote);
 app.use("/shop", shop);
 app.use("/upload", upload);
+app.use("/images", images);
 app.use(express.static("build"));
 
 // todo add configuration to only allow google fonts in production

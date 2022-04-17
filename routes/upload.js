@@ -1,25 +1,35 @@
 import express from "express";
-import fileupload from "express-fileupload";
+import multer from "multer";
+import { uploadFile } from "../aws/s3.js";
 
 const upload = express.Router();
-upload.use(fileupload());
 
-upload.post("", async (_req, res) => {
-  return res
-    .status(400)
-    .json({ error: true, message: "Bad request seller id or title missing" });
+const saveImage = multer({
+  dest: "tmp/",
 });
 
-upload.post("/:seller/:title", async (req, res) => {
-  if (!req.files || Object.keys(req.files).length === 0) {
-    return res
-      .status(400)
-      .json({ error: true, message: "No files were uploaded." });
+upload.post(
+  "/:title",
+  saveImage.array("product_image", 5),
+  async (req, res) => {
+    try {
+      const { title } = req?.params;
+      if (!title) throw new Error("Invalid request");
+      const formData = req.files;
+
+      const data = await formData.map(
+        async (file, index) =>
+          await uploadFile(
+            file,
+            title + index + Math.floor(Math.random() * 10000)
+          )
+      );
+
+      return res.send(data);
+    } catch (error) {
+      console.log(error?.message);
+    }
   }
-
-  const fileName = Object.keys(req.files)[0];
-  const path = `${__dirname}/product/${fileName}`;
-  return res.status(200).json({ message: req.params, path });
-});
+);
 
 export default upload;

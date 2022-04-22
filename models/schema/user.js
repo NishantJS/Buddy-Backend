@@ -13,6 +13,16 @@ const userSchema = new mongoose.Schema({
     trim: true,
     lowercase: true,
   },
+  googleId: {
+    type: String,
+    unique: [true, "Account already exists with other provider"],
+    required: false,
+  },
+  facebookId: {
+    type: String,
+    unique: [true, "Account already exists with other provider"],
+    required: false,
+  },
   address: [
     {
       full_name: String,
@@ -85,7 +95,7 @@ const userSchema = new mongoose.Schema({
   temp: {
     otp: Number,
   },
-  pass: { type: String, required: true },
+  pass: { type: String },
 });
 
 export default userSchema;

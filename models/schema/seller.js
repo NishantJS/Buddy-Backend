@@ -7,6 +7,16 @@ const sellerSchema = new mongoose.Schema({
     required: true,
     unique: true,
   },
+  googleId: {
+    type: String,
+    unique: [true, "Account already exists with other provider"],
+    required: false,
+  },
+  facebookId: {
+    type: String,
+    unique: [true, "Account already exists with other provider"],
+    required: false,
+  },
   address: [
     {
       full_name: String,

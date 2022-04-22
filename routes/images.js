@@ -3,16 +3,20 @@ import { downloadFile } from "../aws/s3.js";
 
 const images = express.Router();
 
-images.get("/:title", async (req, res) => {
+images.get("/:seller/:title", async (req, res) => {
   try {
     const title = req.params.title;
-    if (!title) throw new Error("Please provide image URI");
-    const { error, data } = await downloadFile(title);
+    const seller = req.params.seller;
+
+    if (!title || !seller) throw new Error("Please provide image URI");
+
+    const { error, data } = await downloadFile(title, seller);
     if (error) throw new Error(data);
     return res.status(200).send(data);
   } catch (error) {
-    console.log(error);
-    return res.status(500).json({ error: true, data: "Image not found" });
+    return res
+      .status(500)
+      .json({ error: true, data: error?.message || "Image not found" });
   }
 });
 

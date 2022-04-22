@@ -2,30 +2,44 @@ import { User } from "../models/index.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
-const _create = async ({ email, pass }) => {
+const getToken = (id) => {
+  const payload = { user: id };
+  const token = jwt.sign(payload, process.env.JWT_SECRET, {
+    expiresIn: process.env.JWT_EXPIRES_IN,
+  });
+  return token;
+};
+
+const _create = async ({ email, pass, provider = false }) => {
   try {
-    const saltRounds = 10;
-    const salt = await bcrypt.genSalt(saltRounds);
-    let hashed = await bcrypt.hash(pass, salt);
-
-    const newUser = await new User({
+    const userDataObj = {
       email,
-      pass: hashed,
-    });
+    };
 
-    const userData = await newUser.save();
-    if (!userData) throw new Error();
-    let user = userData;
-    const payload = { user: user._id };
+    if (pass) {
+      const saltRounds = 10;
+      const salt = await bcrypt.genSalt(saltRounds);
+      userDataObj["pass"] = await bcrypt.hash(pass, salt);
+    }
 
-    const token = jwt.sign(payload, process.env.JWT_SECRET, {
-      expiresIn: process.env.JWT_EXPIRES_IN,
-    });
+    if (provider) {
+      userDataObj[provider.source] = provider["id"];
+    }
+
+    if (!provider && !pass) {
+      if (pass)
+        throw new Error("Please provide password for non-provider logins");
+    }
+
+    const newUser = await new User(userDataObj);
+
+    const user = await newUser.save();
+    if (!user) throw new Error();
 
     user.pass = undefined;
     return {
       error: false,
-      token,
+      token: getToken(user._id),
       user,
       data: "Login Successful",
       status: 201,
@@ -51,9 +65,9 @@ const _findAll = async (res) => {
   }
 };
 
-const _checkOne = async ({ email, pass }) => {
+const _checkOne = async ({ email, pass = false }) => {
   try {
-    const user = await User.findOne({ email }).lean();
+    const user = await User.findOne({ email }).select("_id").lean();
 
     if (user)
       return {
@@ -62,6 +76,38 @@ const _checkOne = async ({ email, pass }) => {
         status: 409,
       };
     return await _create({ email, pass });
+  } catch (error) {
+    return {
+      error: true,
+      data: error?.message || "⚠ Some error occurred while checking Email",
+    };
+  }
+};
+
+const _checkWithProvider = async ({ email, provider }) => {
+  try {
+    const user = await User.findOne({ email }).select("-pass").lean();
+
+    if (user && user[provider.source]) return getToken(user._id);
+    else if (user && !user[provider.source]) {
+      const { source, id } = provider;
+      const response = await User.updateOne(
+        { _id: user?._id },
+        { [source]: id },
+        {
+          upsert: true,
+        }
+      );
+      if (response["modifiedCount"] === 1) {
+        return getToken(user._id);
+      } else
+        return {
+          error: true,
+          data: "Merged failed! Please try again💥",
+          status: 403,
+        };
+    }
+    return await _create({ email, provider, pass: false });
   } catch (error) {
     return {
       error: true,
@@ -80,26 +126,26 @@ const _findOne = async ({ email, pass }) => {
         data: `User not found with ${email} ❌`,
         status: 404,
       };
-    } else if (user) {
+    } else if (user && user?.pass) {
       const match = await bcrypt.compare(pass, user.pass);
 
       if (match) {
         user.pass = undefined;
 
-        const payload = { user: user._id };
-
-        const token = jwt.sign(payload, process.env.JWT_SECRET, {
-          expiresIn: process.env.JWT_EXPIRES_IN,
-        });
-
         return {
-          token,
+          token: getToken(user._id),
           user,
           data: "Login Successful",
           error: false,
         };
       } else
         return { data: "Password is incorrect ❌", error: true, status: 401 };
+    } else {
+      return {
+        data: "Account already exists with a different provider! You can login through that and add password there for email login",
+        error: true,
+        status: 409,
+      };
     }
   } catch (error) {
     return {
@@ -109,45 +155,16 @@ const _findOne = async ({ email, pass }) => {
   }
 };
 
-const _update = async (req, res) => {
-  User.findByIdAndUpdate(
-    req.user.user,
-    {
-      req: req.body.title || "Untitled Note",
-      content: req.body.content,
-    },
-    { upsert: true }
-  )
-    .then((note) => {
-      if (!note) {
-        return res.status(404).json({
-          data: "Note not found with id " + req.params.noteId,
-        });
-      }
-      res.json(note);
-    })
-    .catch((error) => {
-      if (error.kind === "ObjectId") {
-        return res.status(404).json({
-          data: "Note not found with id " + req.params.noteId,
-        });
-      }
-      return res.status(500).json({
-        data: "Error updating note with id " + req.params.noteId,
-      });
-    });
-};
-
 const _delete = async (req, res) => {
   try {
-    const { email, fname } = req.body;
+    const { email } = req.body;
     const user = await User.deleteOne({ email });
     if (!user.deletedCount) {
       return res.status(404).json({ error: true, data: "User Not Found ❌" });
     } else
       return res.status(200).json({
         error: false,
-        data: `Account deleted ❌. We are sorry to let you go ${fname} 😢`,
+        data: `Account deleted ❌. We are sorry to let you go 😢`,
       });
   } catch (error) {
     return res.status(500).json({
@@ -179,28 +196,14 @@ const _getOneById = async (id) => {
   }
 };
 
-const _checkId = async (token) => {
-  try {
-    const { user } = jwt.verify(token, process.env.JWT_SECRET);
-    if (!user) throw new Error("Token Invalid! Please login again💥");
-
-    const isValid = await User.findById(user).lean();
-    if (!isValid) throw new Error("Account does not exists");
-    return { isValid: user };
-  } catch (error) {
-    return { isValid: false, data: error?.message };
-  }
-};
-
 export default {
   _create,
   _delete,
   _findAll,
   _findOne,
-  _update,
   _checkOne,
   _getOneById,
-  _checkId,
+  _checkWithProvider,
 };
 
-export { _checkOne, _findOne, _getOneById };
+export { _checkOne, _findOne, _getOneById, _checkWithProvider };

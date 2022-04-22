@@ -4,8 +4,7 @@ import {
   S3Client,
   GetObjectCommand,
 } from "@aws-sdk/client-s3";
-import { createReadStream } from "fs";
-import { resolve } from "path";
+// import { createReadStream } from "fs";
 config({ path: "../.env" });
 
 const client = new S3Client({
@@ -17,24 +16,31 @@ const client = new S3Client({
 });
 
 const uploadFile = async (file, title) => {
-  const fileStream = createReadStream(file.path);
+  try {
+    if (file?.mimetype !== "image/png") return false;
+    if (file?.buffer.toString("hex", 0, 4) !== "89504e47") return false;
 
-  const uploadParams = {
-    Bucket: process.env.AWS_PRODUCT_BUCKET,
-    Body: fileStream,
-    Key: `${title}.png`,
-    ContentType: file?.mimetype,
-  };
+    // const fileStream = createReadStream(file.path);
+    const uploadParams = {
+      Bucket: process.env.AWS_PRODUCT_BUCKET,
+      Body: file?.buffer,
+      Key: title,
+      ContentType: file?.mimetype,
+    };
 
-  const putCommand = new PutObjectCommand(uploadParams);
-  return await client.send(putCommand);
+    const putCommand = new PutObjectCommand(uploadParams);
+    await client.send(putCommand);
+    return true;
+  } catch (error) {
+    return false;
+  }
 };
 
-const downloadFile = async (title) => {
+const downloadFile = async (title, seller) => {
   try {
     const downloadParams = {
       Bucket: process.env.AWS_PRODUCT_BUCKET,
-      Key: title,
+      Key: seller + "/" + title,
     };
 
     const getCommand = new GetObjectCommand(downloadParams);
@@ -51,9 +57,9 @@ const downloadFile = async (title) => {
     const bodyContents = await streamToString(Body);
     return { error: false, data: bodyContents };
   } catch (error) {
-    return { error: true, data: "Image not found!" };
+    return { error: true, data: error?.Code || "Image not found!" };
   }
 };
 
-export default { uploadFile };
+export default { uploadFile, uploadFile };
 export { uploadFile, downloadFile };

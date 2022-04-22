@@ -26,9 +26,9 @@ import user from "./routes/user.js";
 import seller from "./routes/seller.js";
 import shop from "./routes/shop/index.js";
 import quote from "./routes/quotes.js";
-import upload from "./routes/upload.js";
 import restoreSession from "./routes/restoreSession.js";
 import images from "./routes/images.js";
+import auth from "./routes/auth/index.js";
 
 // ?Middlewares
 // todo remove morgan in production
@@ -51,9 +51,9 @@ app.use((_req, res, next) => {
 app.use("/session", restoreSession);
 app.use("/user", user);
 app.use("/seller", seller);
+app.use("/v1/auth", auth);
 app.use("/quote", quote);
 app.use("/shop", shop);
-app.use("/upload", upload);
 app.use("/images", images);
 app.use(express.static("build"));
 

@@ -1,10 +1,10 @@
+import { config } from "dotenv";
 import { Strategy } from "passport-jwt";
 import passport from "passport";
+config({ path: "../.env" });
 
 const cookieExtractor = (req) => {
-  var token = null;
-  if (req && req.signedCookies) token = req?.signedCookies["token"];
-  return token;
+  return req?.signedCookies ? req.signedCookies["token"] : null;
 };
 
 const opt = {
@@ -17,11 +17,11 @@ passport.use(
     try {
       const { expiration } = jwt_payload;
       if (Date.now() > expiration) {
-        done("Unauthorized", false);
+        return done("Unauthorized", false);
       }
       return done(null, jwt_payload);
     } catch (err) {
-      done(err);
+      return done(err);
     }
   })
 );

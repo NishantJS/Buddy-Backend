@@ -89,13 +89,14 @@ user.use(
   async (req, res, next) => {
     try {
       const { token } = req.signedCookies;
-      if (!token) throw new Error("Unauthorized");
+      if (!token || !req.user.user) throw new Error("Unauthorized");
       next();
       return;
-    } catch (err) {
-      return res
-        .status(404)
-        .json({ error: true, data: err?.message || "Error checking user id" });
+    } catch (error) {
+      return res.status(401).json({
+        error: true,
+        data: error?.message || "Error checking user id",
+      });
     }
   }
 );

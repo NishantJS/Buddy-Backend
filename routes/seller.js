@@ -3,6 +3,7 @@ import passport from "passport";
 import { _checkOne, _findOne } from "../controller/sellers.js";
 import authValidator from "../validator/auth_sign.js";
 import product from "./shop/product.patch.js";
+import upload from "./upload.js";
 
 const seller = express.Router();
 
@@ -82,24 +83,25 @@ seller.post("/register", async (req, res) => {
 });
 
 seller.use(
-  ["/product/add"],
+  ["/product/add", "/upload"],
   passport.authenticate("jwt", { session: false }),
   async (req, res, next) => {
     try {
       const { token } = req.signedCookies;
-      if (!token) throw new Error("Unauthorized");
+      if (!token || !req.user.seller) throw new Error("Unauthorized");
       next();
       return;
-    } catch (err) {
-      return res.status(500).json({
+    } catch (error) {
+      return res.status(401).json({
         error: true,
-        data: err?.message || "Error checking seller id",
+        data: error?.message || "Error checking seller id",
       });
     }
   }
 );
 
 seller.use("/product", product);
+seller.use("/upload", upload);
 
 seller.delete("/", async (req, res) => {
   await Seller._delete(req, res);

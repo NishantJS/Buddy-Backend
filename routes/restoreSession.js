@@ -15,7 +15,8 @@ session.get("/", async (req, res) => {
 
     if (jwtData?.user) {
       const { error, user, data, status = 200 } = await getUser(jwtData.user);
-      if (error)
+      if (error) {
+        req.logout();
         return res
           .status(status)
           .clearCookie("token", {
@@ -25,6 +26,7 @@ session.get("/", async (req, res) => {
             sameSite: "strict",
           })
           .json({ error, data });
+      }
       return res.status(status).json({ error: false, user });
     }
 
@@ -35,7 +37,8 @@ session.get("/", async (req, res) => {
         data,
         status = 200,
       } = await getSeller(jwtData.seller);
-      if (error)
+      if (error) {
+        req.logout();
         return res
           .status(status)
           .clearCookie("token", {
@@ -45,11 +48,13 @@ session.get("/", async (req, res) => {
             sameSite: "strict",
           })
           .json({ error, data });
+      }
       return res.status(status).json({ error: false, seller });
     }
 
     return res.status(200).json({ error: false });
   } catch (error) {
+    req.logout();
     return res
       .status(500)
       .clearCookie("token", {
@@ -62,7 +67,7 @@ session.get("/", async (req, res) => {
   }
 });
 
-session.delete("/", async (_req, res) => {
+session.delete("/", async (req, res) => {
   try {
     return res
       .status(200)

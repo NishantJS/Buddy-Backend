@@ -1,35 +1,36 @@
 import { config } from "dotenv";
-import { Strategy } from "passport-google-oauth20";
+import { Strategy } from "passport-facebook";
 import passport from "passport";
 import { _checkWithProvider as findUser } from "../controller/users.js";
 import { _checkWithProvider as findSeller } from "../controller/sellers.js";
 config({ path: "../.env" });
 
-const setupGoogleStrategy = (role = "user") => {
-  const callbackURL = `http://localhost:5000/v1/auth/google/${role}`;
+const setupFBStrategy = (role = "user") => {
+  const callbackURL = `http://localhost:5000/v1/auth/facebook/${role}`;
   return async (_req, _res, next) => {
     passport.use(
       new Strategy(
         {
-          clientID: process.env.GOOGLE_0AUTH_CLIENT_ID,
-          clientSecret: process.env.GOOGLE_0AUTH_CLIENT_SECRET,
+          clientID: process.env.FACEBOOK_0AUTH_CLIENT_ID,
+          clientSecret: process.env.FACEBOOK_0AUTH_CLIENT_SECRET,
           callbackURL,
+          profileFields: ["id", "email"],
         },
-        async (_req, _accessToken, _refreshToken, profile, cb) => {
+        async (_accessToken, _refreshToken, profile, cb) => {
           try {
             const email = profile.emails[0].value;
-            const googleId = profile.id;
+            const facebookId = profile.id;
 
             if (role === "user") {
               const token = await findUser({
                 email,
-                provider: { source: "googleId", id: googleId },
+                provider: { source: "facebookId", id: facebookId },
               });
               return cb(null, token);
             } else if (role === "seller") {
               const token = await findSeller({
                 email,
-                provider: { source: "googleId", id: googleId },
+                provider: { source: "facebookId", id: facebookId },
               });
               return cb(null, token);
             } else throw new Error("Invalid role");
@@ -43,4 +44,4 @@ const setupGoogleStrategy = (role = "user") => {
   };
 };
 
-export { setupGoogleStrategy };
+export { setupFBStrategy };

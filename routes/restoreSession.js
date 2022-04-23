@@ -16,7 +16,6 @@ session.get("/", async (req, res) => {
     if (jwtData?.user) {
       const { error, user, data, status = 200 } = await getUser(jwtData.user);
       if (error) {
-        req.logout();
         return res
           .status(status)
           .clearCookie("token", {
@@ -38,7 +37,6 @@ session.get("/", async (req, res) => {
         status = 200,
       } = await getSeller(jwtData.seller);
       if (error) {
-        req.logout();
         return res
           .status(status)
           .clearCookie("token", {
@@ -54,7 +52,7 @@ session.get("/", async (req, res) => {
 
     return res.status(200).json({ error: false });
   } catch (error) {
-    req.logout();
+    req;
     return res
       .status(500)
       .clearCookie("token", {

@@ -1,1 +1,0 @@
-{"version":3,"file":"static/js/812.2b2afb8f.chunk.js","mappings":"uHAQA,UARqB,WACnB,OACE","sources":["view/pages/CategoryPage.jsx"],"sourcesContent":["const CategoryPage = () => {\r\n  return (\r\n    <div>\r\n      Category Page\r\n    </div>\r\n  )\r\n}\r\n\r\nexport default CategoryPage\r\n"],"names":[],"sourceRoot":""}

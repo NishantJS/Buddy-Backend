@@ -1,14 +1,14 @@
 import { User, isObjectId } from "../models/index.js";
 
-const _updateCartAdd = async (id, updateData) => {
+const _updateCartAdd = async (_id, updateData) => {
   try {
-    if (!isObjectId(id)) throw new Error("Invalid ID");
+    if (!isObjectId(_id)) throw new Error("Invalid ID");
     const updatedData = await User.findByIdAndUpdate(
-      id,
+      _id,
       {
         $addToSet: {
           cart: {
-            _id: updateData._id,
+            id: updateData.id,
             title: updateData.title,
             thumbnail: updateData.thumbnail,
             sizes: updateData.sizes,
@@ -34,14 +34,14 @@ const _updateCartAdd = async (id, updateData) => {
   }
 };
 
-const _updateCartRemove = async (id, updateData) => {
+const _updateCartRemove = async (_id, updateData) => {
   try {
-    if (!isObjectId(id)) throw new Error("Invalid ID");
+    if (!isObjectId(_id)) throw new Error("Invalid ID");
     const updatedData = await User.findByIdAndUpdate(
-      id,
+      _id,
       {
         $pull: {
-          cart: { _id: updateData._id, variant: updateData.variant },
+          cart: { id: updateData.id, variant: updateData.variant },
         },
       },
       { new: true }
@@ -57,15 +57,15 @@ const _updateCartRemove = async (id, updateData) => {
   }
 };
 
-const _updateWishListAdd = async (id, updateData) => {
+const _updateWishListAdd = async (_id, updateData) => {
   try {
-    if (!isObjectId(id)) throw new Error("Invalid ID");
+    if (!isObjectId(_id)) throw new Error("Invalid ID");
     const updatedData = await User.findByIdAndUpdate(
-      id,
+      _id,
       {
         $addToSet: {
           wishlist: {
-            _id: updateData._id,
+            id: updateData.id,
             title: updateData.title,
             thumbnail: updateData.thumbnail,
             sizes: updateData.sizes,
@@ -91,17 +91,46 @@ const _updateWishListAdd = async (id, updateData) => {
   }
 };
 
-const _updateWishListRemove = async (id, updateData) => {
+const _updateWishListRemove = async (_id, updateData) => {
   try {
-    if (!isObjectId(id)) throw new Error("Invalid ID");
+    if (!isObjectId(_id)) throw new Error("Invalid ID");
     const updatedData = await User.findByIdAndUpdate(
-      id,
+      _id,
       {
         $pull: {
-          wishlist: { _id: updateData._id, variant: updateData.variant },
+          wishlist: { id: updateData.id, variant: updateData.variant },
         },
       },
       { new: true }
+    );
+
+    if (!updatedData) throw new Error();
+    return { error: false, data: updatedData };
+  } catch (error) {
+    return {
+      error: true,
+      data: error?.message || "Wrong Token. Please Login Again!",
+    };
+  }
+};
+
+const _updateCartQuantity = async (
+  _id,
+  item_id,
+  isIncrement = true,
+  variant = 0
+) => {
+  try {
+    if (!isObjectId(_id)) throw new Error("Invalid ID");
+    const updatedData = await User.findOneAndUpdate(
+      {
+        _id,
+        "cart.id": item_id,
+        variant: variant,
+      },
+      {
+        $inc: { "cart.$.quantity": isIncrement ? 1 : -1 },
+      }
     );
 
     if (!updatedData) throw new Error();
@@ -119,4 +148,5 @@ export default {
   _updateWishListAdd,
   _updateCartRemove,
   _updateWishListRemove,
+  _updateCartQuantity,
 };

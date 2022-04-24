@@ -1,12 +1,11 @@
-import express from "express";
+import { Router } from "express";
 import UserPatch from "../controller/users.patch.js";
 
-const wishlist = express.Router();
+const wishlist = Router();
 
 wishlist.patch("/", async (req, res) => {
   try {
-    if (!req?.body?._id || !req?.user?.user)
-      throw new Error("Wishlist Data Not found");
+    if (!req?.body?.id) throw new Error("Wishlist Data Not found");
     const wishlist = req.body;
     const id = req.user.user;
 
@@ -24,10 +23,10 @@ wishlist.patch("/", async (req, res) => {
 
 wishlist.delete("/", async (req, res) => {
   try {
-    if (!req.query?.id || !req?.user?.user || !req.query?.variant)
+    if (!req.query?.id || !req.query?.variant)
       throw new Error("Wishlist Data Not found");
 
-    const wishlist = { _id: req.query.id, variant: req.query.variant };
+    const wishlist = { id: req.query.id, variant: req.query.variant };
     const id = req.user.user;
 
     const { error, data } = await UserPatch._updateWishListRemove(id, wishlist);

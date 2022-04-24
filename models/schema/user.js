@@ -2,10 +2,7 @@ import mongoose from "mongoose";
 
 const categoryError = "Invalid Category";
 const userSchema = new mongoose.Schema({
-  username: {
-    fname: String,
-    lname: String,
-  },
+  username: String,
   email: {
     type: String,
     required: true,
@@ -13,14 +10,8 @@ const userSchema = new mongoose.Schema({
     trim: true,
     lowercase: true,
   },
-  googleId: {
-    type: String,
-    required: false,
-  },
-  facebookId: {
-    type: String,
-    required: false,
-  },
+  googleId: String,
+  facebookId: String,
   address: [
     {
       full_name: String,
@@ -35,7 +26,8 @@ const userSchema = new mongoose.Schema({
   ],
   cart: [
     {
-      id: mongoose.Schema.Types.ObjectId,
+      _id: false,
+      id: String,
       title: String,
       sizes: {
         size: String,
@@ -51,11 +43,18 @@ const userSchema = new mongoose.Schema({
         min: [100, categoryError],
         max: [300, categoryError],
       },
+      quantity: {
+        type: Number,
+        min: [1, "At least one quantity needed to place in cart"],
+        max: [99, "Max quantity hit"],
+        default: 1,
+      },
     },
   ],
   wishlist: [
     {
-      id: mongoose.Schema.Types.ObjectId,
+      _id: false,
+      id: String,
       title: String,
       sizes: {
         size: String,
@@ -75,7 +74,8 @@ const userSchema = new mongoose.Schema({
   ],
   orders: [
     {
-      id: mongoose.Schema.Types.ObjectId,
+      _id: false,
+      id: String,
       title: String,
       price: {
         price: Number,

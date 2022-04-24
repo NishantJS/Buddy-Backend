@@ -1,9 +1,9 @@
-import express from "express";
+import { Router } from "express";
 import { setupFBStrategy } from "../../auth/facebook.js";
 import { setupGoogleStrategy } from "../../auth/google.js";
 import passport from "passport";
 
-const auth = express.Router();
+const auth = Router();
 
 auth.use(passport.initialize());
 
@@ -22,10 +22,19 @@ const commonResponse = async (req, res) => {
         })
         .json({ error: false, data: "Authentication Successful!" });
     } else
-      return res.status(401).json({
-        error: true,
-        data: "Authentication Failed! Please try again",
-      });
+      return res
+        .status(401)
+        .clearCookie("token", {
+          signed: true,
+          httpOnly: true,
+          secure: true,
+          sameSite: "strict",
+          maxAge: Number.parseInt(process.env.JWT_EXPIRES_IN),
+        })
+        .json({
+          error: true,
+          data: "Authentication Failed! Please try again",
+        });
   } catch (error) {
     return res
       .status(500)
@@ -44,7 +53,7 @@ auth.get(
   "/facebook/seller",
   setupFBStrategy("seller"),
   passport.authenticate("facebook", {
-    scope: ["id", "email"],
+    scope: ["email"],
     session: false,
   }),
   async (req, res) => await commonResponse(req, res)

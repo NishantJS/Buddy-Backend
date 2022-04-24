@@ -11,7 +11,10 @@ test.json
 testing
 *.rest
 
+build
 tmp/
+paymments
+routes/checkout.js
 
 vscode/*
 !.vscode/settings.json
@@ -22,3 +25,4 @@ vscode/*
 todo.md
 
 security.env
+

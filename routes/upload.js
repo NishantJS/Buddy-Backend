@@ -1,8 +1,8 @@
-import express from "express";
+import { Router } from "express";
 import multer from "multer";
 import { uploadFile } from "../aws/s3.js";
 
-const upload = express.Router();
+const upload = Router();
 
 const saveImage = multer();
 

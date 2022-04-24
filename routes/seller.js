@@ -1,11 +1,11 @@
-import express from "express";
+import { Router } from "express";
 import passport from "passport";
 import { _checkOne, _findOne } from "../controller/sellers.js";
 import authValidator from "../validator/auth_sign.js";
 import product from "./shop/product.patch.js";
 import upload from "./upload.js";
 
-const seller = express.Router();
+const seller = Router();
 
 const base64Decode = async (headers) => {
   try {

@@ -1,8 +1,8 @@
-import express from "express";
+import { Router } from "express";
 import productValidator from "../../validator/productValidator.js";
 import Product from "../../controller/product.js";
 
-const product = express.Router();
+const product = Router();
 
 product.post("/add", async (req, res) => {
   try {

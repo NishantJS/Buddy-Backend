@@ -1,6 +1,6 @@
-import express from "express";
+import { Router } from "express";
 import Cats from "../../controller/cats.js";
-const cat = express.Router();
+const cat = Router();
 
 cat.get("/", async (_req, res) => {
   try {

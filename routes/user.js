@@ -1,11 +1,12 @@
-import express from "express";
+import { Router } from "express";
 import passport from "passport";
 import { _checkOne, _findOne } from "../controller/users.js";
 import authValidator from "../validator/auth_sign.js";
 import cart from "./cart.js";
+import checkout from "./checkout.js";
 import wishlist from "./wishlist.js";
 
-const user = express.Router();
+const user = Router();
 
 const base64Decode = async (headers) => {
   try {
@@ -84,7 +85,7 @@ user.post("/register", async (req, res) => {
 });
 
 user.use(
-  ["/wishlist", "/cart", "/profile", "/orders"],
+  ["/wishlist", "/cart", "/profile", "/orders", "/checkout"],
   passport.authenticate("jwt", { session: false }),
   async (req, res, next) => {
     try {
@@ -103,6 +104,7 @@ user.use(
 
 user.use("/cart", cart);
 user.use("/wishlist", wishlist);
+user.use("/checkout", checkout);
 
 user.delete("/", async (req, res) => {
   // await User._delete(req, res);

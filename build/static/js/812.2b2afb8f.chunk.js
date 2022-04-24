@@ -1,2 +1,0 @@
-"use strict";(self.webpackChunkbuddy=self.webpackChunkbuddy||[]).push([[812],{1812:function(e,u,n){n.r(u);var d=n(184);u.default=function(){return(0,d.jsx)("div",{children:"Category Page"})}}}]);
-//# sourceMappingURL=812.2b2afb8f.chunk.js.map

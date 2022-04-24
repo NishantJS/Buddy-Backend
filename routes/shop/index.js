@@ -1,10 +1,10 @@
-import express from "express";
+import { Router } from "express";
 import dog from "./dog.js";
 import cat from "./cat.js";
 import Dogs from "../../controller/dogs.js";
 import Cats from "../../controller/cats.js";
 
-const shop = express.Router();
+const shop = Router();
 
 shop.use("/dog", dog);
 shop.use("/cat", cat);

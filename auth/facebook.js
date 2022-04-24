@@ -18,8 +18,9 @@ const setupFBStrategy = (role = "user") => {
         },
         async (_accessToken, _refreshToken, profile, cb) => {
           try {
-            const email = profile.emails[0].value;
+            const email = profile?.emails?.[0]?.value;
             const facebookId = profile.id;
+            if (!email) cb("Please give access for email!", null);
 
             if (role === "user") {
               const token = await findUser({
@@ -33,7 +34,7 @@ const setupFBStrategy = (role = "user") => {
                 provider: { source: "facebookId", id: facebookId },
               });
               return cb(null, token);
-            } else throw new Error("Invalid role");
+            } else return cb("Invalid role", null);
           } catch (error) {
             return cb(error, null);
           }

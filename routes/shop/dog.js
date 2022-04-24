@@ -1,6 +1,6 @@
-import express from "express";
+import { Router } from "express";
 import Dogs from "../../controller/dogs.js";
-const dog = express.Router();
+const dog = Router();
 
 dog.get("/", async (_req, res) => {
   try {

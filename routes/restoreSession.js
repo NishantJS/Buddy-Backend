@@ -1,9 +1,9 @@
-import express from "express";
+import { Router } from "express";
 import { _getOneById as getUser } from "../controller/users.js";
 import { _getOneById as getSeller } from "../controller/sellers.js";
 import jwt from "jsonwebtoken";
 
-const session = express.Router();
+const session = Router();
 
 session.get("/", async (req, res) => {
   try {

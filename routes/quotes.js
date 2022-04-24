@@ -1,10 +1,10 @@
-import express from "express";
+import { Router } from "express";
 import { readFile } from "fs/promises";
 const quotes = JSON.parse(
   await readFile(new URL("./quotes.json", import.meta.url))
 );
 
-const quote = express.Router();
+const quote = Router();
 
 quote.get("/random", async (_req, res) => {
   try {

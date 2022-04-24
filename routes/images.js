@@ -1,7 +1,7 @@
-import express from "express";
+import { Router } from "express";
 import { downloadFile } from "../aws/s3.js";
 
-const images = express.Router();
+const images = Router();
 
 images.get("/:seller/:title", async (req, res) => {
   try {

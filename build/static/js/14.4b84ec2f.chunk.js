@@ -1,2 +1,0 @@
-"use strict";(self.webpackChunkbuddy=self.webpackChunkbuddy||[]).push([[14],{2014:function(u,e,n){n.r(e);var d=n(184);e.default=function(){return(0,d.jsx)("div",{children:"shop"})}}}]);
-//# sourceMappingURL=14.4b84ec2f.chunk.js.map

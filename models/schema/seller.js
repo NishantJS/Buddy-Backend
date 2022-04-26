@@ -20,6 +20,7 @@ const sellerSchema = new mongoose.Schema({
       state: String,
       pin: Number,
       phone: [Number],
+      isPrimary: { type: Boolean, default: false },
     },
   ],
   products: [String],

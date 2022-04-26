@@ -122,10 +122,10 @@ const _findOne = async ({ email, pass }) => {
     if (!seller) {
       return {
         error: true,
-        data: `Seller account not found with ${email} ❌`,
+        data: `Seller not found with ${email} ❌`,
         status: 404,
       };
-    } else if (seller) {
+    } else if (seller && seller?.pass) {
       const match = await bcrypt.compare(pass, seller.pass);
 
       if (match) {
@@ -139,6 +139,12 @@ const _findOne = async ({ email, pass }) => {
         };
       } else
         return { data: "Password is incorrect ❌", error: true, status: 401 };
+    } else {
+      return {
+        data: "Account already exists with a different provider! You can login through that and add password there for email login",
+        error: true,
+        status: 409,
+      };
     }
   } catch (error) {
     return {

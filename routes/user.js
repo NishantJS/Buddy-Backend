@@ -1,7 +1,8 @@
 import { Router } from "express";
 import passport from "passport";
-import { _checkOne, _findOne } from "../controller/users.js";
+import { _checkOne, _findOne, _updateAddress } from "../controller/users.js";
 import authValidator from "../validator/auth_sign.js";
+import addressValidator from "../validator/address.js";
 import cart from "./cart.js";
 import checkout from "./checkout.js";
 import wishlist from "./wishlist.js";
@@ -85,7 +86,7 @@ user.post("/register", async (req, res) => {
 });
 
 user.use(
-  ["/wishlist", "/cart", "/profile", "/orders", "/checkout"],
+  ["/wishlist", "/cart", "/profile", "/orders", "/checkout", "/address"],
   passport.authenticate("jwt", { session: false }),
   async (req, res, next) => {
     try {
@@ -105,6 +106,19 @@ user.use(
 user.use("/cart", cart);
 user.use("/wishlist", wishlist);
 user.use("/checkout", checkout);
+
+user.post("/address/add", async (req, res) => {
+  try {
+    const { errors, isValid } = addressValidator(req.body);
+    if (!isValid) throw new Error(errors);
+    const { error, data } = await _updateAddress(req.user.user, req.body);
+    if (error) throw new Error(data);
+
+    return res.status(error ? 500 : 200).json({ error, data });
+  } catch (error) {
+    return res.status(500).json({ error: true, data: error?.message });
+  }
+});
 
 user.delete("/", async (req, res) => {
   // await User._delete(req, res);

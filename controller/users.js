@@ -1,4 +1,4 @@
-import { User } from "../models/index.js";
+import { User, isObjectId } from "../models/index.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
@@ -196,6 +196,42 @@ const _getOneById = async (id) => {
   }
 };
 
+const _updateAddress = async (_id, address) => {
+  try {
+    if (!isObjectId(_id)) throw new Error("Invalid ID");
+    const updatedAddress = await User.findByIdAndUpdate(
+      _id,
+      {
+        $addToSet: {
+          address: {
+            full_name: address.full_name,
+            line1: address.line1,
+            line2: address.line2,
+            state: address.state,
+            city: address.city,
+            phone: address.phone,
+            pin: address.pin,
+            isPrimary: address.isPrimary,
+          },
+        },
+      },
+      { new: true }
+    );
+    if (!updatedAddress)
+      return {
+        error: true,
+        data: "Make sure you are providing all parameters while making an API call",
+      };
+
+    return { error: false, data: "Address added successfully" };
+  } catch (error) {
+    return {
+      error: true,
+      data: error?.message || "Wrong Token. Please Login Again!",
+    };
+  }
+};
+
 export default {
   _create,
   _delete,
@@ -206,4 +242,4 @@ export default {
   _checkWithProvider,
 };
 
-export { _checkOne, _findOne, _getOneById, _checkWithProvider };
+export { _checkOne, _findOne, _getOneById, _checkWithProvider, _updateAddress };

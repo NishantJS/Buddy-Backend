@@ -14,6 +14,7 @@ const _updateCartAdd = async (_id, updateData) => {
             sizes: updateData.sizes,
             variant: updateData.variant,
             uci: updateData.uci,
+            seller: updateData.seller,
           },
         },
       },
@@ -71,6 +72,7 @@ const _updateWishListAdd = async (_id, updateData) => {
             sizes: updateData.sizes,
             variant: updateData.variant,
             uci: updateData.uci,
+            seller: updateData.seller,
           },
         },
       },
@@ -114,32 +116,20 @@ const _updateWishListRemove = async (_id, updateData) => {
   }
 };
 
-const _updateCartQuantity = async (
-  _id,
-  item_id,
-  isIncrement = true,
-  variant = 0
-) => {
+const _updateManyOrders = async (transaction) => {
   try {
-    if (!isObjectId(_id)) throw new Error("Invalid ID");
-    const updatedData = await User.findOneAndUpdate(
-      {
-        _id,
-        "cart.id": item_id,
-        variant: variant,
-      },
-      {
-        $inc: { "cart.$.quantity": isIncrement ? 1 : -1 },
-      }
-    );
+    const ordersIds = transaction.map((item) => item._id);
 
-    if (!updatedData) throw new Error();
-    return { error: false, data: updatedData };
+    await User.findByIdAndUpdate(transaction[0]["user"], {
+      $set: {
+        cart: [],
+      },
+      $push: {
+        orders: ordersIds,
+      },
+    });
   } catch (error) {
-    return {
-      error: true,
-      data: error?.message || "Wrong Token. Please Login Again!",
-    };
+    console.error(error?.message);
   }
 };
 
@@ -148,5 +138,5 @@ export default {
   _updateWishListAdd,
   _updateCartRemove,
   _updateWishListRemove,
-  _updateCartQuantity,
+  _updateManyOrders,
 };

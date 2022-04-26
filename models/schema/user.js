@@ -36,19 +36,13 @@ const userSchema = new mongoose.Schema({
         allowed: Number,
         stock: Number,
       },
-      thumbnail: String,
       variant: { type: Number, default: 0 },
       uci: {
         type: Number,
         min: [100, categoryError],
         max: [300, categoryError],
       },
-      quantity: {
-        type: Number,
-        min: [1, "At least one quantity needed to place in cart"],
-        max: [99, "Max quantity hit"],
-        default: 1,
-      },
+      seller: String,
     },
   ],
   wishlist: [
@@ -63,37 +57,20 @@ const userSchema = new mongoose.Schema({
         allowed: Number,
         stock: Number,
       },
-      thumbnail: String,
       variant: { type: Number, default: 0 },
       uci: {
         type: Number,
         min: [100, categoryError],
         max: [300, categoryError],
       },
+      seller: String,
     },
   ],
-  orders: [
-    {
-      _id: false,
-      id: String,
-      title: String,
-      price: {
-        price: Number,
-        retail: String,
-      },
-      status: Number,
-      variant: { type: Number, default: 0 },
-      uci: {
-        type: Number,
-        min: [100, categoryError],
-        max: [300, categoryError],
-      },
-    },
-  ],
+  orders: [String],
   temp: {
     otp: Number,
   },
-  pass: { type: String },
+  pass: String,
 });
 
 export default userSchema;

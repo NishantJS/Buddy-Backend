@@ -20,7 +20,7 @@ const commonResponse = async (req, res) => {
           sameSite: "strict",
           maxAge: Number.parseInt(process.env.JWT_EXPIRES_IN),
         })
-        .json({ error: false, data: "Authentication Successful!" });
+        .send("<script>window.close();</script>");
     } else
       return res
         .status(401)

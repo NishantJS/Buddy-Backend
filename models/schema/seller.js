@@ -6,6 +6,8 @@ const sellerSchema = new mongoose.Schema({
     type: String,
     required: true,
     unique: true,
+    trim: true,
+    lowercase: true,
   },
   googleId: String,
   facebookId: String,
@@ -20,12 +22,11 @@ const sellerSchema = new mongoose.Schema({
       phone: [Number],
     },
   ],
-  products: [
-    {
-      id: mongoose.Schema.Types.ObjectId,
-    },
-  ],
-  pass: { type: String, required: true },
+  products: [String],
+  pendingOrders: [String],
+  cancelledOrders: [String],
+  acceptedOrders: [String],
+  pass: String,
 });
 
 export default sellerSchema;

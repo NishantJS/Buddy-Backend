@@ -13,8 +13,6 @@ testing
 
 build
 tmp/
-paymments
-routes/checkout.js
 
 vscode/*
 !.vscode/settings.json

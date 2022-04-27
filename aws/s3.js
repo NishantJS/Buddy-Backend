@@ -8,10 +8,10 @@ import {
 config({ path: "../.env" });
 
 const client = new S3Client({
-  region: process.env.AWS_REGION,
+  region: process.env.AWS__REGION,
   credentials: {
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+    accessKeyId: process.env.AWS__ACCESS_KEY_ID,
+    secretAccessKey: process.env.AWS__SECRET_ACCESS_KEY,
   },
 });
 
@@ -22,7 +22,7 @@ const uploadFile = async (file, title) => {
 
     // const fileStream = createReadStream(file.path);
     const uploadParams = {
-      Bucket: process.env.AWS_PRODUCT_BUCKET,
+      Bucket: process.env.AWS__PRODUCT_BUCKET,
       Body: file?.buffer,
       Key: title,
       ContentType: file?.mimetype,

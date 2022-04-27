@@ -199,6 +199,16 @@ const _getOneById = async (id) => {
 const _updateAddress = async (_id, address) => {
   try {
     if (!isObjectId(_id)) throw new Error("Invalid ID");
+    if (address["isPrimary"] === true) {
+      await User.findOneAndUpdate(
+        _id,
+        {
+          $set: { "address.$[elem].isPrimary": false },
+        },
+        { arrayFilters: [{ "elem.isPrimary": true }] }
+      );
+    }
+
     const updatedAddress = await User.findByIdAndUpdate(
       _id,
       {
@@ -217,13 +227,45 @@ const _updateAddress = async (_id, address) => {
       },
       { new: true }
     );
+
     if (!updatedAddress)
       return {
         error: true,
         data: "Make sure you are providing all parameters while making an API call",
       };
 
-    return { error: false, data: "Address added successfully" };
+    return {
+      error: false,
+      data: "Address added successfully",
+    };
+  } catch (error) {
+    return {
+      error: true,
+      data: error?.message || "Wrong Token. Please Login Again!",
+    };
+  }
+};
+
+const _deleteAddress = async (_id, index) => {
+  try {
+    if (!isObjectId(_id)) throw new Error("Invalid ID");
+
+    const updatedAddress = await User.findByIdAndUpdate(_id, {
+      $pull: {
+        address: { _id: index },
+      },
+    });
+
+    if (!updatedAddress)
+      return {
+        error: true,
+        data: "Make sure you are providing all parameters while making an API call",
+      };
+
+    return {
+      error: false,
+      data: "Address removed successfully",
+    };
   } catch (error) {
     return {
       error: true,
@@ -242,4 +284,11 @@ export default {
   _checkWithProvider,
 };
 
-export { _checkOne, _findOne, _getOneById, _checkWithProvider, _updateAddress };
+export {
+  _checkOne,
+  _findOne,
+  _getOneById,
+  _checkWithProvider,
+  _updateAddress,
+  _deleteAddress,
+};

@@ -1,6 +1,11 @@
 import { Router } from "express";
 import passport from "passport";
-import { _checkOne, _findOne, _updateAddress } from "../controller/users.js";
+import {
+  _checkOne,
+  _findOne,
+  _updateAddress,
+  _deleteAddress,
+} from "../controller/users.js";
 import authValidator from "../validator/auth_sign.js";
 import addressValidator from "../validator/address.js";
 import cart from "./cart.js";
@@ -112,6 +117,22 @@ user.post("/address/add", async (req, res) => {
     const { errors, isValid } = addressValidator(req.body);
     if (!isValid) throw new Error(errors);
     const { error, data } = await _updateAddress(req.user.user, req.body);
+    if (error) throw new Error(data);
+
+    return res.status(error ? 500 : 200).json({ error, data });
+  } catch (error) {
+    return res.status(500).json({ error: true, data: error?.message });
+  }
+});
+
+user.delete("/address/remove/", async (req, res) => {
+  try {
+    if (!req.query?.index) throw new Error("Index Not Found");
+
+    const { error, data } = await _deleteAddress(
+      req.user.user,
+      req.query.index
+    );
     if (error) throw new Error(data);
 
     return res.status(error ? 500 : 200).json({ error, data });

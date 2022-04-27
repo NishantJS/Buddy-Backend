@@ -1,9 +1,15 @@
 import { Router } from "express";
 import passport from "passport";
-import { _checkOne, _findOne } from "../controller/sellers.js";
+import {
+  _checkOne,
+  _findOne,
+  _deleteAddress,
+  _updateAddress,
+} from "../controller/sellers.js";
 import authValidator from "../validator/auth_sign.js";
 import product from "./shop/product.patch.js";
 import upload from "./upload.js";
+import addressValidator from "../validator/address.js";
 
 const seller = Router();
 
@@ -83,7 +89,7 @@ seller.post("/register", async (req, res) => {
 });
 
 seller.use(
-  ["/product/add", "/upload"],
+  ["/product/add", "/upload", "/address"],
   passport.authenticate("jwt", { session: false }),
   async (req, res, next) => {
     try {
@@ -102,6 +108,35 @@ seller.use(
 
 seller.use("/product", product);
 seller.use("/upload", upload);
+
+seller.post("/address/add", async (req, res) => {
+  try {
+    const { errors, isValid } = addressValidator(req.body);
+    if (!isValid) throw new Error(errors);
+    const { error, data } = await _updateAddress(req.user.seller, req.body);
+    if (error) throw new Error(data);
+
+    return res.status(error ? 500 : 200).json({ error, data });
+  } catch (error) {
+    return res.status(500).json({ error: true, data: error?.message });
+  }
+});
+
+seller.delete("/address/remove/", async (req, res) => {
+  try {
+    if (!req.query?.index) throw new Error("Index Not Found");
+
+    const { error, data } = await _deleteAddress(
+      req.user.seller,
+      req.query.index
+    );
+    if (error) throw new Error(data);
+
+    return res.status(error ? 500 : 200).json({ error, data });
+  } catch (error) {
+    return res.status(500).json({ error: true, data: error?.message });
+  }
+});
 
 seller.delete("/", async (req, res) => {
   await Seller._delete(req, res);

@@ -31,9 +31,10 @@ import images from "./routes/images.js";
 import auth from "./routes/auth/index.js";
 
 // ?Middlewares
-// todo remove morgan in production
 app.use(cookieParser(process.env.COOKIE_SECRET));
-app.use(logger("dev"));
+if (app.get("env") !== "production") {
+  app.use(logger("dev"));
+}
 app.use(passport.initialize());
 app.use(
   cors({ origin: "http://localhost:3000", maxAge: 600, credentials: true })

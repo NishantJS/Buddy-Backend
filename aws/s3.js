@@ -4,7 +4,6 @@ import {
   S3Client,
   GetObjectCommand,
 } from "@aws-sdk/client-s3";
-// import { createReadStream } from "fs";
 config({ path: "../.env" });
 
 const client = new S3Client({

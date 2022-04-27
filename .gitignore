@@ -11,7 +11,6 @@ test.json
 testing
 *.rest
 
-build
 tmp/
 
 vscode/*
@@ -23,4 +22,5 @@ vscode/*
 todo.md
 
 security.env
-
+.http
+.rest

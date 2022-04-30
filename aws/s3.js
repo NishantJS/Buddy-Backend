@@ -16,8 +16,8 @@ const client = new S3Client({
 
 const uploadFile = async (file, title) => {
   try {
-    if (file?.mimetype !== "image/png") return false;
-    if (file?.buffer.toString("hex", 0, 4) !== "89504e47") return false;
+    const pngMagicNumber = "89504e47";
+    if (file?.buffer.toString("hex", 0, 4) !== pngMagicNumber) return false;
 
     // const fileStream = createReadStream(file.path);
     const uploadParams = {

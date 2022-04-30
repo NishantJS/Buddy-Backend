@@ -17,4 +17,19 @@ const _updateManyOrders = async (transaction) => {
   }
 };
 
+export const _updateProductAdd = async (_id, product_id, product_title) => {
+  try {
+    await Seller.findByIdAndUpdate(_id, {
+      $push: {
+        products: { id: product_id, title: product_title },
+      },
+    });
+
+    return { error: false };
+  } catch (error) {
+    console.log(error);
+    return { error: true };
+  }
+};
+
 export default { _updateManyOrders };

@@ -1,8 +1,8 @@
 import { Cat, isObjectId } from "../models/index.js";
 
-const _create = async (body) => {
+const _create = async (body, sub_category) => {
   try {
-    const newProduct = await new Cat[body.uci[2]](body);
+    const newProduct = await new Cat[sub_category](body);
     const product = await newProduct.save();
     return { error: false, data: "Product added successfully", product };
   } catch (error) {

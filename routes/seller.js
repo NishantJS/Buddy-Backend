@@ -7,9 +7,8 @@ import {
   _updateAddress,
 } from "../controller/sellers.js";
 import authValidator from "../validator/auth_sign.js";
-import product from "./shop/product.patch.js";
-import upload from "./upload.js";
 import addressValidator from "../validator/address.js";
+import product from "./product.js";
 
 const seller = Router();
 
@@ -89,7 +88,7 @@ seller.post("/register", async (req, res) => {
 });
 
 seller.use(
-  ["/product/add", "/upload", "/address"],
+  ["/product", "/address"],
   passport.authenticate("jwt", { session: false }),
   async (req, res, next) => {
     try {
@@ -107,7 +106,6 @@ seller.use(
 );
 
 seller.use("/product", product);
-seller.use("/upload", upload);
 
 seller.post("/address/add", async (req, res) => {
   try {

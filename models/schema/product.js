@@ -3,11 +3,11 @@ import mongoose from "mongoose";
 const min = [100, "Invalid UCI"];
 const max = [300, "Invalid UCI"];
 const minDesc = [
-  100,
+  50,
   "Provided description is too small, you need a proper description to describe a product",
 ];
 const maxDesc = [
-  1100,
+  300,
   "Provided description exceeded the word count! Please shorten it",
 ];
 
@@ -21,7 +21,7 @@ const productSchema = {
     minLength: [3, "Product name too short"],
     maxLength: [90, "Product name too long"],
   },
-  images: [{ type: String }],
+  images: Number,
   uci: { type: Number, required, min, max },
   sizes: [
     {
@@ -43,7 +43,7 @@ const productSchema = {
   description: {
     main: { type: String, minLength: minDesc, maxLength: maxDesc, required },
   },
-  seller: { type: mongoose.SchemaTypes.ObjectId, required },
+  seller: { type: String, required },
 };
 
 export default productSchema;

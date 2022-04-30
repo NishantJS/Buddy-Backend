@@ -23,7 +23,7 @@ const sellerSchema = new mongoose.Schema({
       isPrimary: { type: Boolean, default: false },
     },
   ],
-  products: [String],
+  products: [{ title: String, id: String, _id: false }],
   pendingOrders: [String],
   cancelledOrders: [String],
   acceptedOrders: [String],

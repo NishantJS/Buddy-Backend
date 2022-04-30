@@ -3,13 +3,16 @@ import Cats from "./cats.js";
 
 const _create = async (body) => {
   try {
-    if (body.uci[0] === "1" || body.uci[0] === 1)
-      return await Dogs._create(body);
-    if (body.uci[0] === "2" || body.uci[0] === 2)
-      return await Cats._create(body);
+    const uci = String(body.uci);
+    const category = Number(uci[0]);
+    const sub_category = Number(uci[2]);
+
+    if (category === 1) return await Dogs._create(body, sub_category);
+    if (category === 2) return await Cats._create(body, sub_category);
     throw new Error("Invalid UCI");
-  } catch (err) {
-    return { error: true, data: err?.message || "something went wrong" };
+  } catch (error) {
+    console.log(error);
+    return { error: true, data: error?.message || "something went wrong" };
   }
 };
 

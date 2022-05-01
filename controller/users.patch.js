@@ -10,7 +10,6 @@ const _updateCartAdd = async (_id, updateData) => {
           cart: {
             id: updateData.id,
             title: updateData.title,
-            thumbnail: updateData.thumbnail,
             sizes: updateData.sizes,
             variant: updateData.variant,
             uci: updateData.uci,
@@ -68,7 +67,6 @@ const _updateWishListAdd = async (_id, updateData) => {
           wishlist: {
             id: updateData.id,
             title: updateData.title,
-            thumbnail: updateData.thumbnail,
             sizes: updateData.sizes,
             variant: updateData.variant,
             uci: updateData.uci,

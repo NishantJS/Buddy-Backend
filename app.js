@@ -34,19 +34,13 @@ import auth from "./routes/auth/index.js";
 app.use(cookieParser(process.env.COOKIE_SECRET));
 if (app.get("env") !== "production") {
   app.use(logger("dev"));
+  app.use(
+    cors({ origin: "http://localhost:3000", maxAge: 600, credentials: true })
+  );
 }
 app.use(passport.initialize());
-app.use(
-  cors({ origin: "http://localhost:3000", maxAge: 600, credentials: true })
-);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true, limit: "10mb" }));
-
-app.use((_req, res, next) => {
-  // ?Hide server name for security reasons
-  res.setHeader("X-Powered-By", "Nginx");
-  next();
-});
 
 // ?Use Routers
 app.use("/session", restoreSession);

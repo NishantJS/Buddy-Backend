@@ -6,7 +6,7 @@ import { _checkWithProvider as findSeller } from "../controller/sellers.js";
 config({ path: "../.env" });
 
 const setupFBStrategy = (role = "user") => {
-  const callbackURL = `http://localhost:5000/v1/auth/facebook/${role}`;
+  const callbackURL = `http://localhost:8080/v1/auth/facebook/${role}`;
   return async (_req, _res, next) => {
     passport.use(
       new Strategy(

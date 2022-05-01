@@ -6,7 +6,7 @@ import { _checkWithProvider as findSeller } from "../controller/sellers.js";
 config({ path: "../.env" });
 
 const setupGoogleStrategy = (role = "user") => {
-  const callbackURL = `http://localhost:5000/v1/auth/google/${role}`;
+  const callbackURL = `http://localhost:8080/v1/auth/google/${role}`;
   return async (_req, _res, next) => {
     passport.use(
       new Strategy(

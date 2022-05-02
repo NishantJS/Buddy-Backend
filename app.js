@@ -35,7 +35,11 @@ app.use(cookieParser(process.env.COOKIE_SECRET));
 if (app.get("env") !== "production") {
   app.use(logger("dev"));
   app.use(
-    cors({ origin: "http://localhost:3000", maxAge: 600, credentials: true })
+    cors({
+      origin: "http://localhost:3000/",
+      maxAge: 600,
+      credentials: true,
+    })
   );
 }
 app.use(passport.initialize());
